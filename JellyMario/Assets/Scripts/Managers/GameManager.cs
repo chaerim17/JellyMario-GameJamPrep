@@ -25,10 +25,6 @@ namespace JellyMario.Managers
 
             Debug.Log("GameManager Awake 실행");
         }
-        private void Start()
-        {
-            Debug.Log("GameManager Start 실행");
-        }
 
         // 게임 상태를 변경하는 함수
         public void ChangeState(GameState newState)
