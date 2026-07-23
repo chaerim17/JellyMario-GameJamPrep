@@ -26,5 +26,8 @@ namespace JellyMario.Core
 
         // UIManager 접근
         public static UIManager UI => UIManager.Instance;
+
+        // SoundManager 접근
+        public static SoundManager Sound => SoundManager.Instance;
     }
 }
