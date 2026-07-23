@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using JellyMario.Core;
 
 namespace JellyMario.Managers
@@ -12,13 +12,25 @@ namespace JellyMario.Managers
 
         }
 
+        // GET 요청을 보내는 공통 함수
+        private IEnumerator SendGetRequest(string url)
+        {
+            yield break;
+        }
+
+        // POST 요청을 보내는 공통 함수
+        private IEnumerator SendPostRequest(string url, string jsonData)
+        {
+            yield break;
+        }
+
         // 랭킹 조회
         public void GetRanking()
         {
 
         }
 
-        // 점수를 서버에 등록
+        // 점수 등록
         public void SubmitScore()
         {
 
