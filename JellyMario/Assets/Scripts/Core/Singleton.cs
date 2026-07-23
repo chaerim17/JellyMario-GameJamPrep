@@ -9,6 +9,12 @@ namespace JellyMario.Core
         // 어디서든 접근할 수 있는 유일한 객체
         public static T Instance;
 
+        // 싱글톤 객체가 생성된 후 초기화를 수행하는 함수
+        protected virtual void Initialize()
+        {
+
+        }
+
         // Unity가 오브젝트를 생성하면 가장 먼저 실행되는 함수
         protected virtual void Awake()
         {
@@ -20,6 +26,9 @@ namespace JellyMario.Core
 
                 // 씬이 바뀌어도 삭제되지 않도록 설정
                 DontDestroyOnLoad(gameObject);
+
+                // 싱글톤 객체 초기화
+                Initialize();
             }
             else
             {

@@ -20,5 +20,8 @@ namespace JellyMario.Core
 
         // PlayerManager 접근
         public static PlayerManager Player => PlayerManager.Instance;
+
+        // InputManager 접근
+        public static InputManager Input => InputManager.Instance;
     }
 }
