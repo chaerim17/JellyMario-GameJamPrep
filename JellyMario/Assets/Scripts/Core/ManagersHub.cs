@@ -17,5 +17,8 @@ namespace JellyMario.Core
 
         // ResourceManager 접근
         public static ResourceManager Resource => ResourceManager.Instance;
+
+        // PlayerManager 접근
+        public static PlayerManager Player => PlayerManager.Instance;
     }
 }
