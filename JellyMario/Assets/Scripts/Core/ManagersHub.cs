@@ -23,5 +23,8 @@ namespace JellyMario.Core
 
         // InputManager 접근
         public static InputManager Input => InputManager.Instance;
+
+        // UIManager 접근
+        public static UIManager UI => UIManager.Instance;
     }
 }
