@@ -8,4 +8,14 @@
         Pause,
         Result
     }
+
+    // 씬 종류
+    public enum SceneType
+    {
+        Init,
+        MainMenu,
+        Tutorial,
+        Easy,
+        Hard
+    }
 }

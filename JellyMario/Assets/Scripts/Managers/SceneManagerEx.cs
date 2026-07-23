@@ -18,19 +18,29 @@ namespace JellyMario.Managers
             Debug.Log("SceneManagerEx Awake 실행");
         }
 
-        // 씬을 변경하는 함수
-        public void LoadScene(string sceneName)
+        // 게임 시작 후 첫 씬 설정
+        private void Start()
         {
-            // sceneName과 같은 이름의 씬으로 이동
-            SceneManager.LoadScene(sceneName);
+            if (GetCurrentScene() == SceneType.Init)
+            {
+                LoadScene(SceneType.MainMenu);
+            }
+        }
 
-            Debug.Log($"씬 이동 : {sceneName}");
+        // 씬을 변경하는 함수
+        public void LoadScene(SceneType sceneType)
+        {
+            SceneManager.LoadScene(sceneType.ToString());
+
+            Debug.Log($"씬 이동 : {sceneType}");
         }
 
         // 현재 씬 이름을 반환하는 함수
-        public string GetCurrentScene()
+        public SceneType GetCurrentScene()
         {
-            return SceneManager.GetActiveScene().name;
+            return (SceneType)System.Enum.Parse(
+                typeof(SceneType),
+                SceneManager.GetActiveScene().name);
         }
     }
 }
