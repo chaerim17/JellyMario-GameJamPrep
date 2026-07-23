@@ -14,5 +14,8 @@ namespace JellyMario.Core
 
         // WebManager 접근
         public static WebManager Web => WebManager.Instance;
+
+        // ResourceManager 접근
+        public static ResourceManager Resource => ResourceManager.Instance;
     }
 }
