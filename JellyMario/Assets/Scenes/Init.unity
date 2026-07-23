@@ -369,6 +369,8 @@ GameObject:
   - component: {fileID: 1702438469}
   - component: {fileID: 1702438471}
   - component: {fileID: 1702438472}
+  - component: {fileID: 1702438473}
+  - component: {fileID: 1702438474}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -427,6 +429,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07a5ab7219834894bb9166fa84f2159a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.ResourceManager
+--- !u!114 &1702438473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702438468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d8b022729eff9e4ea656cf5cc084705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.PlayerManager
+--- !u!114 &1702438474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702438468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 611a13e8dbfe1bf4082631fea9cbcc03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.InputManager
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
