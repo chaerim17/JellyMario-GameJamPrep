@@ -334,6 +334,10 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+    - rid: 538446791316865111
+      type: {class: 'Provider2DCache`1[[UnityEngine.Rendering.Universal.Light2DProvider, Unity.RenderPipelines.Universal.2D.Runtime]]', ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Cache: []
     - rid: 1908730712645959686
       type: {class: Light2DProviderSources, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data:
@@ -341,7 +345,7 @@ MonoBehaviour:
         m_SelectedSource:
           rid: -2
         m_Provider2DCache:
-          rid: -2
+          rid: 538446791316865111
 --- !u!4 &619394802
 Transform:
   m_ObjectHideFlags: 0
@@ -373,6 +377,7 @@ GameObject:
   - component: {fileID: 1702438474}
   - component: {fileID: 1702438475}
   - component: {fileID: 1702438476}
+  - component: {fileID: 1702438477}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -479,6 +484,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4f26a396c2ff245aee82bc807121bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.SoundManager
+--- !u!114 &1702438477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702438468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df3284c70bf814649b711b387cc92f35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.WebManager
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
