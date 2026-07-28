@@ -7,7 +7,7 @@
         // 플레이어 이름
         public string playerName;
 
-        // 플레이어 점수
-        public int score;
+        // 클리어 시간
+        public float clearTime;
     }
 }
