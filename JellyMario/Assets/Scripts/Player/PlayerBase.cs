@@ -1,61 +1,152 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace JellyMario.Player
 {
+    // 플레이어의 상태
+    public enum PlayerState
+    {
+        Idle,
+        Move,
+        Jump,
+        Hit,
+        Die
+    }
+
     // 모든 플레이어의 부모 클래스
     public class PlayerBase : MonoBehaviour
     {
+        [Header("Idle 설정")]
+        [SerializeField] private Sprite[] idleFrames;
+        [SerializeField] private float idleFrameTime = 0.5f;
+
+        [Header("Move 설정")]
+        [SerializeField] private Sprite[] moveFrames;
+        [SerializeField] private float moveFrameTime = 0.1f;
+
+        private SpriteRenderer _spriteRenderer;
+        private Coroutine _animationCoroutine;
+
+        public PlayerState CurrentState { get; private set; }
+
         // 플레이어 초기화
+        protected virtual void Awake()
+        {
+            Initialize();
+
+            CurrentState = PlayerState.Idle;
+            SetAnimation(CurrentState);
+        }
+
+        protected virtual void Update()
+        {
+            HandleInput();
+            HandleMovement();
+        }
+
         protected virtual void Initialize()
         {
-
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
+
+        protected virtual void HandleInput()
+        {
+        }
+
+        protected virtual void HandleMovement()
+        {
+        }
+
+        protected virtual void ChangeState(PlayerState newState)
+        {
+            if (CurrentState == newState)
+                return;
+
+            CurrentState = newState;
+            SetAnimation(CurrentState);
+        }
+
 
         // 대기
         public virtual void Idle()
         {
-
+            ChangeState(PlayerState.Idle);
         }
 
         // 이동
         public virtual void Move()
         {
-
-        }
-
-        // 달리기
-        public virtual void Run()
-        {
-
+            ChangeState(PlayerState.Move);
         }
 
         // 점프
         public virtual void Jump()
         {
-
+            ChangeState(PlayerState.Jump);
         }
 
         // 피격
         public virtual void Hit()
         {
-
+            ChangeState(PlayerState.Hit);
         }
 
         // 사망
         public virtual void Die()
         {
-
+            ChangeState(PlayerState.Die);
         }
 
-        // 애니메이션 변경
-        protected virtual void SetAnimation(string animationName)
+        protected virtual void SetAnimation(PlayerState state)
         {
+            Sprite[] selectedFrames;
+            float selectedFrameTime;
 
+            switch (state) 
+            {
+                case PlayerState.Idle:
+                    selectedFrames = idleFrames;
+                    selectedFrameTime = idleFrameTime;
+
+                    break;
+
+                case PlayerState.Move:
+                    selectedFrames = moveFrames;
+                    selectedFrameTime = moveFrameTime;
+
+                    break;
+
+                default:
+                    Debug.LogWarning($"등록되지 않은 애니메이션: {state}", this);
+
+                    return;
+            }
+
+            if (selectedFrames == null || selectedFrames.Length == 0) {
+                Debug.LogWarning($"{state} 이미지가 등록되지 않았습니다.", this);
+
+                return;
+            }
+
+            if (_animationCoroutine != null) {
+                StopCoroutine(_animationCoroutine);
+            }
+
+            _animationCoroutine = StartCoroutine(PlayAnimation(selectedFrames, selectedFrameTime));
         }
 
-        protected virtual void Awake()
+        private IEnumerator PlayAnimation(Sprite[] frames, float frameTime)
         {
-            Initialize();
+            WaitForSeconds wait = new WaitForSeconds(frameTime);
+
+            while (true) {
+                foreach (Sprite frame in frames) {
+                    if (frame != null) 
+                        _spriteRenderer.sprite = frame;
+
+                    yield return wait;
+                }
+            }
         }
     }
 }

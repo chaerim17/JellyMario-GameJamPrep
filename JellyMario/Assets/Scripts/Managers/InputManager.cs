@@ -31,13 +31,6 @@ namespace JellyMario.Managers
             return new Vector2(horizontal, 0f);
         }
 
-        // 달리기 입력 반환
-        public virtual bool GetRunInput()
-        {
-
-            return false;
-        }
-
         // 점프 입력 반환
         public virtual bool GetJumpInput()
         {
