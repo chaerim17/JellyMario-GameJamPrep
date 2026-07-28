@@ -14,6 +14,11 @@ namespace JellyMario.Player
 
             // 플레이어 초기화
         }
+        
+        public override void Idle()
+        {
+            // 대기 구현
+        }
 
         public override void Move()
         {

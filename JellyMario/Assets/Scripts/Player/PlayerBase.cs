@@ -11,6 +11,12 @@ namespace JellyMario.Player
 
         }
 
+        // 대기
+        public virtual void Idle()
+        {
+
+        }
+
         // 이동
         public virtual void Move()
         {
