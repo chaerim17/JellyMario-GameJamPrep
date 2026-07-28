@@ -6,43 +6,45 @@ namespace JellyMario.Player
     // 플레이어를 제어하는 기본 클래스
     public class PlayerController : PlayerBase
     {
+        [Header("Move 설정")]
+        [SerializeField] private float moveSpeed = 5f;
+
+        private Vector2 _moveInput;
+
         protected override void Initialize()
         {
             base.Initialize();
 
-            ManagersHub.Player.RegisterPlayer(this);
+            if (ManagersHub.Player != null)
+                ManagersHub.Player.RegisterPlayer(this);
+        }
 
-            // 플레이어 초기화
+        protected override void HandleInput()
+        {
+            if (ManagersHub.Input == null) {
+                _moveInput = Vector2.zero;
+                return;
+            }
+
+            _moveInput = ManagersHub.Input.GetMoveInput();
+        }
+
+        protected override void HandleMovement()
+        {
+            if (Mathf.Abs(_moveInput.x) <= 0.01f) {
+                Idle();
+                return;
+            }
+            else
+                Move();
         }
 
         public override void Move()
         {
-            // 이동 구현
-        }
+            base.Move();
 
-        public override void Run()
-        {
-            // 달리기 구현
-        }
-
-        public override void Jump()
-        {
-            // 점프 구현
-        }
-
-        public override void Hit()
-        {
-            // 피격 구현
-        }
-
-        public override void Die()
-        {
-            // 사망 구현
-        }
-
-        protected override void SetAnimation(string animationName)
-        {
-            // 애니메이션 변경
+            float distance = _moveInput.x * moveSpeed * Time.deltaTime;
+            transform.position += Vector3.right * distance;
         }
     }
 }

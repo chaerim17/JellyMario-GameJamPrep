@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 using JellyMario.Core;
 
 namespace JellyMario.Managers
@@ -14,22 +15,30 @@ namespace JellyMario.Managers
         // 이동 입력 반환
         public virtual Vector2 GetMoveInput()
         {
+            Keyboard keyboard = Keyboard.current;
 
-            return Vector2.zero;
-        }
+            if (keyboard == null)
+                return Vector2.zero;
 
-        // 달리기 입력 반환
-        public virtual bool GetRunInput()
-        {
+            // 좌우 이동 입력 처리
+            float horizontal = 0f;
 
-            return false;
+            if (keyboard.leftArrowKey.isPressed)
+                horizontal -= 1f;
+            if (keyboard.rightArrowKey.isPressed)
+                horizontal += 1f;
+
+            return new Vector2(horizontal, 0f);
         }
 
         // 점프 입력 반환
         public virtual bool GetJumpInput()
         {
+            Keyboard keyboard = Keyboard.current;
 
-            return false;
+            // 점프 입력은 위쪽 화살표 키를 눌렀을 때 반환
+            return keyboard != null &&
+                   keyboard.upArrowKey.wasPressedThisFrame;
         }
     }
 }
