@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 419040428}
   - component: {fileID: 419040427}
   - component: {fileID: 419040426}
+  - component: {fileID: 419040429}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -211,6 +212,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &419040429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419040425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1 &782656834
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,6 +421,8 @@ GameObject:
   - component: {fileID: 1182690435}
   - component: {fileID: 1182690436}
   - component: {fileID: 1182690437}
+  - component: {fileID: 1182690438}
+  - component: {fileID: 1182690439}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -392,7 +439,7 @@ Transform:
   m_GameObject: {fileID: 1182690434}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: -2.1, z: 0}
+  m_LocalPosition: {x: 1, y: -2.05, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -472,11 +519,87 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Player.PlayerController
   idleFrames:
   - {fileID: -8455583299059481146, guid: c075f519ffa698a449a2aa0616ece11c, type: 3}
-  - {fileID: 1435938718540855604, guid: 82dbb07095d30d94b8e0393109a44238, type: 3}
+  - {fileID: -6511610701255145038, guid: 8592cc1dfbbfecf44ae33a822dc60ee1, type: 3}
   idleFrameTime: 0.5
-  moveFrames: []
+  moveFrames:
+  - {fileID: 3280627239212314219, guid: 509f3fa3c1b84044fa3fab2908edbce4, type: 3}
+  - {fileID: -3407604588732083731, guid: d890e453bd81b83489cd62edc8b129a0, type: 3}
   moveFrameTime: 0.5
+  jumpFrames:
+  - {fileID: 1435938718540855604, guid: 82dbb07095d30d94b8e0393109a44238, type: 3}
+  - {fileID: 1368432470808120466, guid: 6d8161762184d454cb2e8ddc4f6633c6, type: 3}
+  jumpFrameTime: 0.5
+  hitFrames: []
+  hitFrameTime: 0.5
+  dieFrames: []
+  dieFrameTime: 0.5
   moveSpeed: 5
+  jumpPower: 7
+  jumpDuration: 0.5
+--- !u!50 &1182690438
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182690434}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!70 &1182690439
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182690434}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0.49}
+  m_Size: {x: 0.83, y: 0.98}
+  m_Direction: 0
 --- !u!1 &1485459447
 GameObject:
   m_ObjectHideFlags: 0
@@ -822,7 +945,7 @@ Transform:
   m_GameObject: {fileID: 2089156432}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.09, y: 0.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

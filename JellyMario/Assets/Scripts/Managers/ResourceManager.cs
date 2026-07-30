@@ -6,7 +6,7 @@ namespace JellyMario.Managers
     public class ResourceManager : Singleton<ResourceManager>
     {
         // ResourceManager 초기화
-        public void Initialize()
+        protected override void Initialize()
         {
 
         }
