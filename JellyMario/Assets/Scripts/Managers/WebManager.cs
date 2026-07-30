@@ -8,7 +8,7 @@ using JellyMario.Network.Response;
 
 namespace JellyMario.Managers
 {
-    // 웹(API)를 관리하는 매니저
+    // 웹(API)를 관리하는 매니저 - Todo : ApiRoutes.cs로 이동 예정
     public class WebManager : Singleton<WebManager>
     {
         // DB 주소와 Publishable Key
@@ -21,8 +21,9 @@ namespace JellyMario.Managers
         protected override void Initialize()
         {
             Debug.Log("WebManager Initialize");
-            TestConnection();
-            TestPostConnection();
+            //TestPostConnection();
+            GetRanking();
+
         }
 
         // GET 요청을 보내는 공통 함수
@@ -37,19 +38,14 @@ namespace JellyMario.Managers
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                Debug.Log($"GET request succeeded: {request.downloadHandler.text}");
+                string json = request.downloadHandler.text;
+                OnRankingReceived(json);
+                Debug.Log($"GET request succeeded: {json}");
             }
             else
             {
                 Debug.LogError($"GET request failed: {request.error}");
             }
-        }
-
-        public void TestConnection()
-        {
-            SendGetRequest(
-                API_URL + "?select=*"
-                );
         }
 
         // POST 요청을 보내는 공통 함수
@@ -82,7 +78,8 @@ namespace JellyMario.Managers
                 );
             }
         }
-        //Todo: Test가 아닌 실제 데이터 값 전달 함수로 변경 예정
+
+        ////Todo: SubmitScore로 변경 -> 실데이터 적용 테스트 시 삭제
         public void TestPostConnection()
         {
             SubmitScoreRequest requestData =
@@ -101,13 +98,47 @@ namespace JellyMario.Managers
         // 랭킹 조회
         public void GetRanking()
         {
+            string url =
+                API_URL +
+                "?select=*" +
+                "&order=clearTime.asc";
 
+            StartCoroutine(
+                SendGetRequest(url)
+            );
         }
 
         // 점수 등록
-        public void SubmitScore()
+        public void SubmitScore(string playerName, float clearTime)
         {
+            SubmitScoreRequest requestData = new SubmitScoreRequest();
 
+            requestData.playerName = playerName;
+            requestData.clearTime = clearTime;
+
+            string jsonData = JsonUtility.ToJson(requestData);
+
+            StartCoroutine(
+                SendPostRequest(API_URL, jsonData)
+            );
+
+            Debug.Log(jsonData);
+        }
+
+        // 랭킹 조회 응답 처리
+        private void OnRankingReceived(string json)
+        {
+            string wrappedJson =
+                "{\"rankings\":" + json + "}";
+
+            RankingResponse response =
+                JsonUtility.FromJson<RankingResponse>(
+                    wrappedJson
+                );
+
+            Debug.Log(
+                $"Ranking Count: {response.rankings.Length}"
+            );
         }
     }
 }
