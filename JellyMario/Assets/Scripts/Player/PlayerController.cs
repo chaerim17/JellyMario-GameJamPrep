@@ -88,7 +88,7 @@ namespace JellyMario.Player
         // 충돌 처리
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (!collision.gameObject.CompareTag("Ground"))
+            if (collision.gameObject.layer != LayerMask.NameToLayer("Ground"))
                 return;
 
             foreach (ContactPoint2D contact in collision.contacts)
