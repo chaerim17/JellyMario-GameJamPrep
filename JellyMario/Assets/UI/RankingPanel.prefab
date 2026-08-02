@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 6388306519336405912}
   - component: {fileID: 1585180165277243316}
   - component: {fileID: 6237137985781290417}
+  - component: {fileID: -2702391318981403739}
   m_Layer: 5
   m_Name: RankingPanel
   m_TagString: Untagged
@@ -177,7 +178,7 @@ RectTransform:
   m_GameObject: {fileID: 102073534825543578}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5702703229119380954}
@@ -229,6 +230,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-2702391318981403739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102073534825543578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df4957afa593f88439067cc066cca32c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.UI.RankingUI
+  rankTexts: []
+  nameTexts:
+  - {fileID: 6521216335042691479}
+  - {fileID: 2190574172043441257}
+  - {fileID: 2715163319679690409}
+  - {fileID: 8916277326241245453}
+  - {fileID: 5808706892894267582}
+  - {fileID: 4139766534688556607}
+  - {fileID: 3483020178706416887}
+  - {fileID: 2991618687070183157}
+  timeTexts:
+  - {fileID: 5831831523268883396}
+  - {fileID: 9134115910893493251}
+  - {fileID: 187175552932357294}
+  - {fileID: 2032075654628645974}
+  - {fileID: 6176317799266019981}
+  - {fileID: 6273025684250787047}
+  - {fileID: 4671423883388343834}
+  - {fileID: 349313298102749642}
 --- !u!1 &262998270662612963
 GameObject:
   m_ObjectHideFlags: 0
@@ -1640,6 +1672,7 @@ GameObject:
   - component: {fileID: 805744793067991755}
   - component: {fileID: 505960026493908249}
   - component: {fileID: 6828178130397497516}
+  - component: {fileID: 2987753054693805723}
   m_Layer: 5
   m_Name: Rank1
   m_TagString: Untagged
@@ -1769,6 +1802,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2987753054693805723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1502843724695318249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df4957afa593f88439067cc066cca32c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.UI.RankingUI
+  rankTexts: []
+  nameTexts: []
+  timeTexts: []
 --- !u!1 &1645858123203087585
 GameObject:
   m_ObjectHideFlags: 0
@@ -3636,7 +3684,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2533138510869854287}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -2702391318981403739}
+        m_TargetAssemblyTypeName: JellyMario.UI.RankingUI, Assembly-CSharp
+        m_MethodName: OnClickClose
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3708708689935860115
 GameObject:
   m_ObjectHideFlags: 0
