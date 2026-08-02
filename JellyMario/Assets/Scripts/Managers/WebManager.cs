@@ -6,11 +6,16 @@ using JellyMario.Core;
 using JellyMario.Network.Request;
 using JellyMario.Network.Response;
 
+using JellyMario.UI;
+
 namespace JellyMario.Managers
 {
     // 웹(API)를 관리하는 매니저 - Todo : ApiRoutes.cs로 이동 예정
     public class WebManager : Singleton<WebManager>
     {
+        [SerializeField]
+        private RankingUI rankingUI;
+
         // DB 주소와 Publishable Key
         private const string API_URL =
             "https://ifobygojapncuwpwfvwt.supabase.co/rest/v1/ranking";
@@ -18,6 +23,7 @@ namespace JellyMario.Managers
         private const string API_KEY =
             "sb_publishable_CeTXneXavNVq9EXdq4N9VQ_qvWSh2B1";
 
+        //TODO: 테스트 후 제거 예정
         protected override void Initialize()
         {
             Debug.Log("WebManager Initialize");
@@ -100,8 +106,7 @@ namespace JellyMario.Managers
         {
             string url =
                 API_URL +
-                "?select=*" +
-                "&order=clearTime.asc";
+                "?select=*&order=clearTime.asc&limit=10";
 
             StartCoroutine(
                 SendGetRequest(url)
@@ -136,9 +141,14 @@ namespace JellyMario.Managers
                     wrappedJson
                 );
 
-            Debug.Log(
-                $"Ranking Count: {response.rankings.Length}"
-            );
+            rankingUI.ShowRanking(response.rankings);
+
+            foreach (RankingData ranking in response.rankings)
+            {
+                Debug.Log(
+                    $"{ranking.playerName} : {ranking.clearTime}"
+                );
+            }
         }
     }
 }
