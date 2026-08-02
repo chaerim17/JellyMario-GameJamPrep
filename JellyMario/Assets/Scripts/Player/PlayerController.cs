@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using JellyMario.Core;
+﻿using JellyMario.Core;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace JellyMario.Player
 {
@@ -38,7 +39,8 @@ namespace JellyMario.Player
         // 플레이어 입력 처리
         protected override void HandleInput()
         {
-            if (ManagersHub.Input == null) {
+            if (ManagersHub.Input == null)
+            {
                 _moveInput = Vector2.zero;
 
                 return;
@@ -84,7 +86,7 @@ namespace JellyMario.Player
 
             _rigidbody.linearVelocity = new Vector2(_rigidbody.linearVelocity.x, jumpPower);
         }
-        
+
         // 충돌 처리
         private void OnCollisionEnter2D(Collision2D collision)
         {
@@ -105,6 +107,49 @@ namespace JellyMario.Player
 
                     break;
                 }
+            }
+        }
+
+        // 트리거 처리
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            int layer = other.gameObject.layer;
+
+            if (layer == LayerMask.NameToLayer("Hazard") ||
+                layer == LayerMask.NameToLayer("DeathZone"))
+            {
+                Die();
+                return;
+            }
+
+            if (layer == LayerMask.NameToLayer("Goal Flag"))
+            {
+                StageClear();
+            }
+        }
+        public override void Die()
+        {
+            base.Die();
+
+            Debug.Log("Player Dead");
+
+            // TODO : 사망 처리
+            // 현재 씬 다시 시작
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        private void StageClear()
+        {
+            Debug.Log("Stage Clear");
+
+            // TODO : 클리어 처리
+            int currentScene = SceneManager.GetActiveScene().buildIndex;
+            int nextScene = currentScene + 1;
+
+            // 다음 씬이 존재하면 이동
+            if (nextScene < SceneManager.sceneCountInBuildSettings)
+            {
+                SceneManager.LoadScene(nextScene);
             }
         }
     }
