@@ -1,6 +1,7 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using JellyMario.Player;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class BossBase : MonoBehaviour
 {
@@ -122,5 +123,18 @@ public class BossBase : MonoBehaviour
         idleSprites = phase2IdleSprites;
 
         PlayIdleAnimation();
+    }
+
+    // 플레이어와 충돌 시 처리
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!collision.gameObject.CompareTag("Player"))
+            return;
+
+        PlayerController player =
+            collision.gameObject.GetComponent<PlayerController>();
+
+        if (player != null)
+            player.Die();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using JellyMario.Player;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FireballController : MonoBehaviour
@@ -41,17 +42,17 @@ public class FireballController : MonoBehaviour
         direction = dir.normalized;
     }
 
-    // 플레이어와 충돌
+    // 플레이어와 충돌 시 처리
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player"))
             return;
 
-        Debug.Log("Player Hit");
+        PlayerController player =
+            other.GetComponent<PlayerController>();
 
-        // 나중에 플레이어 사망 처리
-
-        Destroy(gameObject);
+        if (player != null)
+            player.Die();
     }
 
     // 현재 스프라이트에 맞게 Polygon Collider 변경

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JellyMario.Player;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class MissileController : MonoBehaviour
@@ -57,5 +58,18 @@ public class MissileController : MonoBehaviour
                 moveSpeed * Time.fixedDeltaTime);
 
         rb.MovePosition(nextPosition);
+    }
+
+    // 플레이어와 충돌 시 처리
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player"))
+            return;
+
+        PlayerController player =
+            other.GetComponent<PlayerController>();
+
+        if (player != null)
+            player.Die();
     }
 }
