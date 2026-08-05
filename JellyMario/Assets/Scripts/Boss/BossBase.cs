@@ -86,6 +86,13 @@ public class BossBase : MonoBehaviour
     {
         Debug.Log("Boss Dead");
 
+        MonsterController[] monsters = FindObjectsByType<MonsterController>();
+
+        foreach (MonsterController monster in monsters)
+        {
+            monster.Die();
+        }
+
         Destroy(gameObject);
     }
 

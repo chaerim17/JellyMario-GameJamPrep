@@ -98,4 +98,13 @@ public class MonsterController : MonoBehaviour
         if (player != null)
             player.Die();
     }
+
+    // 몬스터 제거
+    public void Die()
+    {
+        if (animationCoroutine != null)
+            StopCoroutine(animationCoroutine);
+
+        Destroy(gameObject);
+    }
 }
