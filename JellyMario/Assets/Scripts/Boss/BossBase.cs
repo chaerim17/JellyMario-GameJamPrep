@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BossBase : MonoBehaviour
 {
@@ -16,12 +17,17 @@ public class BossBase : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     protected Rigidbody2D rb;
 
+    protected PolygonCollider2D polygonCollider;
+
+    private readonly List<Vector2> physicsShape = new();
+
     private Coroutine animationCoroutine;
 
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        polygonCollider = GetComponent<PolygonCollider2D>();
 
         currentHp = maxHp;
     }
@@ -29,6 +35,7 @@ public class BossBase : MonoBehaviour
     protected virtual void Start()
     {
         PlayIdleAnimation();
+        UpdateCollider();
     }
 
     // Idle 애니메이션 시작
@@ -48,6 +55,9 @@ public class BossBase : MonoBehaviour
         while (true)
         {
             spriteRenderer.sprite = idleSprites[index];
+
+            // 현재 스프라이트에 맞게 충돌박스 변경
+            UpdateCollider();
 
             index++;
 
@@ -75,5 +85,30 @@ public class BossBase : MonoBehaviour
         Debug.Log("Boss Dead");
 
         Destroy(gameObject);
+    }
+
+    // 현재 스프라이트에 맞게 Polygon Collider 변경
+    protected void UpdateCollider()
+    {
+        if (polygonCollider == null)
+            return;
+
+        Sprite sprite = spriteRenderer.sprite;
+
+        if (sprite == null)
+            return;
+
+        int shapeCount = sprite.GetPhysicsShapeCount();
+
+        polygonCollider.pathCount = shapeCount;
+
+        for (int i = 0; i < shapeCount; i++)
+        {
+            physicsShape.Clear();
+
+            sprite.GetPhysicsShape(i, physicsShape);
+
+            polygonCollider.SetPath(i, physicsShape);
+        }
     }
 }

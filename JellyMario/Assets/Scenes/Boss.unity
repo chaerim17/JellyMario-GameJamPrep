@@ -1083,6 +1083,7 @@ GameObject:
   - component: {fileID: 914803889}
   - component: {fileID: 914803888}
   - component: {fileID: 914803891}
+  - component: {fileID: 914803892}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -1186,7 +1187,7 @@ Transform:
   m_GameObject: {fileID: 914803886}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.75, y: -0.47, z: 0}
+  m_LocalPosition: {x: 26.95, y: -0.45, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1255,6 +1256,29 @@ PolygonCollider2D:
       - {x: -0.19, y: -0.26999998}
       - {x: 0.26, y: -0.26999998}
   m_UseDelaunayMesh: 1
+--- !u!114 &914803892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914803886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 482d004eaa255e441b71bd95f14930b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossController
+  maxHp: 4
+  idleSprites:
+  - {fileID: 4661348907015152157, guid: d7eb5979e71e1a54fbbce0739266a7b2, type: 3}
+  - {fileID: 2115120572093832142, guid: 3907a454bff49f047a63c70e5f06c6f4, type: 3}
+  animationSpeed: 0.4
+  centerPoint: {fileID: 1122310929}
+  playerSpawnPoint: {fileID: 236226834}
+  moveSpeed: 8
+  arriveDistance: 0.5
+  blinkDuration: 2
+  blinkInterval: 0.25
 --- !u!1 &982908993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1294,6 +1318,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.32348, y: -1.35158, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1122310928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1122310929}
+  m_Layer: 0
+  m_Name: CenterPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1122310929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122310928}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.5, y: 21.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9162,3 +9217,4 @@ SceneRoots:
   - {fileID: 236226834}
   - {fileID: 982908995}
   - {fileID: 914803890}
+  - {fileID: 1122310929}
