@@ -116,17 +116,33 @@ TextureImporter:
       name: slime_fire_walk_a_0
       rect:
         serializedVersion: 2
-        x: 3
+        x: 0
         y: 0
-        width: 58
+        width: 64
         height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: 28, y: -17}
+        - {x: 28, y: -4}
+        - {x: 26, y: -1}
+        - {x: 24, y: 5}
+        - {x: 28, y: 13}
+        - {x: 28, y: 20}
+        - {x: 26, y: 24}
+        - {x: 20, y: 25}
+        - {x: -6, y: 25}
+        - {x: -16, y: 19}
+        - {x: -27, y: -1}
+        - {x: -28, y: -8}
+        - {x: -28, y: -19}
+        - {x: -24, y: -26}
+        - {x: -19, y: -27}
+        - {x: 26, y: -27}
+      tessellationDetail: 0.433
       bones: []
       spriteID: 8ee31801b6ec532c0800000000000000
       internalID: -4452425697352139032
@@ -138,7 +154,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 783d188ba6803374e8781f76639b37fd
     internalID: 0
     vertices: []
     indices: 
