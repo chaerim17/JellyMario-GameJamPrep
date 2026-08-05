@@ -37,7 +37,12 @@ public class BossController : BossBase
     [SerializeField] private int fireballPerLine = 10; // 한 줄에 발사할 화염탄 개수
     [SerializeField] private float fireballSpacing = 1f; // 화염탄 간격
 
-    
+    // 페이즈2 패턴3 - 몬스터
+    [Header("Monster")]
+    [SerializeField] private GameObject monsterPrefab; // 몬스터 프리팹
+    [SerializeField] private Transform[] monsterSpawnPoints; // 몬스터 소환 위치 배열
+    [SerializeField] private float monsterPatternTime = 10f; // 몬스터 패턴 지속 시간
+    [SerializeField] private float monsterSpawnDelay = 0.2f; // 몬스터 소환 간격
 
     protected override void Start()
     {
@@ -150,7 +155,9 @@ public class BossController : BossBase
 
         yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
 
-        yield return new WaitForSeconds(5f);
+        yield return SpawnMonsters();
+
+        yield return new WaitForSeconds(monsterPatternTime);
 
         DecreaseHp();
     }
@@ -265,6 +272,24 @@ public class BossController : BossBase
         StartCoroutine(SpawnFireballLine(angle5));
 
         yield return null;
+    }
+
+    // 몬스터 소환
+    private IEnumerator SpawnMonsters()
+    {
+        if (monsterPrefab == null)
+            yield break;
+
+        foreach (Transform point in monsterSpawnPoints)
+        {
+            Instantiate(
+                monsterPrefab,
+                point.position,
+                Quaternion.identity);
+
+            // 다음 몬스터 생성까지 monsterSpawnDelay초 대기
+            yield return new WaitForSeconds(monsterSpawnDelay);
+        }
     }
 
     // 보스 상태 초기화
