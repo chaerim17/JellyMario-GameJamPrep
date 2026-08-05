@@ -66,15 +66,9 @@ public class BossController : BossBase
 
         yield return Pattern1_Move();
 
-        yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
-
         yield return Pattern2_Breath();
 
-        yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
-
         yield return Pattern3_SpawnMonster();
-
-        yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
 
         yield return Pattern4_SpawnTrap();
 
@@ -121,7 +115,10 @@ public class BossController : BossBase
     {
         Debug.Log("Pattern 2 : Breath");
 
+        ResetBoss();
         Teleport();
+
+        yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
 
         // 첫 번째 발사
         yield return FireBreath();
@@ -142,6 +139,11 @@ public class BossController : BossBase
     {
         Debug.Log("Pattern 3 : Spawn Monster");
 
+        ResetBoss();
+        Teleport();
+
+        yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
+
         yield return new WaitForSeconds(5f);
 
         DecreaseHp();
@@ -151,6 +153,11 @@ public class BossController : BossBase
     private IEnumerator Pattern4_SpawnTrap()
     {
         Debug.Log("Pattern 4 : Spawn Trap");
+
+        ResetBoss();
+        Teleport();
+
+        yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
 
         yield return new WaitForSeconds(5f);
 
@@ -257,9 +264,6 @@ public class BossController : BossBase
     // 보스 상태 초기화
     private void ResetBoss()
     {
-        // 실행 중인 모든 코루틴 종료
-        StopAllCoroutines();
-
         // 이동 중지
         isMoving = false;
 
@@ -275,24 +279,32 @@ public class BossController : BossBase
     {
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
+            // 실행 중인 모든 코루틴 종료
+            StopAllCoroutines();
             ResetBoss();
             StartCoroutine(Pattern1_Move());
         }
 
         if (Keyboard.current.digit2Key.wasPressedThisFrame)
         {
+            // 실행 중인 모든 코루틴 종료
+            StopAllCoroutines();
             ResetBoss();
             StartCoroutine(Pattern2_Breath());
         }
 
         if (Keyboard.current.digit3Key.wasPressedThisFrame)
         {
+            // 실행 중인 모든 코루틴 종료
+            StopAllCoroutines();
             ResetBoss();
             StartCoroutine(Pattern3_SpawnMonster());
         }
 
         if (Keyboard.current.digit4Key.wasPressedThisFrame)
         {
+            // 실행 중인 모든 코루틴 종료
+            StopAllCoroutines();
             ResetBoss();
             StartCoroutine(Pattern4_SpawnTrap());
         }
