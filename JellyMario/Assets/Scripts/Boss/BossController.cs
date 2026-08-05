@@ -15,7 +15,7 @@ public class BossController : BossBase
 
     // 플레이어 시작 위치
     [Header("Player Spawn")]
-    [SerializeField] private Transform playerSpawnPoint;
+    [SerializeField] private Transform playerSpawn;
 
     // 패턴 루틴 사용 여부
     [SerializeField] private bool usePatternRoutine = true;
@@ -23,8 +23,9 @@ public class BossController : BossBase
     // 페이즈1 패턴1 - 이동
     [Header("Move")]
     [SerializeField] private float moveSpeed = 8f; // 이동 속도
+    [SerializeField] private Transform playerSpawnPoint; // 플레이어 시작 위치 오브젝트
     [SerializeField] private float arriveDistance = 0.5f; // 도착 거리
-    [SerializeField] private float blinkDuration = 2f; // 깜빡임 지속 시간
+    [SerializeField] private float blinkDuration = 3f; // 깜빡임 지속 시간
     [SerializeField] private float blinkInterval = 0.25f; // 깜빡임 간격
 
     // 이동 중인지 여부
@@ -109,7 +110,7 @@ public class BossController : BossBase
         if (bossStartPoint != null)
             transform.position = bossStartPoint.position;
 
-        if (playerSpawnPoint == null)
+        if (playerSpawn == null)
         {
             Debug.LogError("Player Spawn Point가 연결되지 않았습니다.");
             yield break;
@@ -201,10 +202,10 @@ public class BossController : BossBase
     // 플레이어 시작 위치로 이동
     private void MoveToPlayerSpawn()
     {
-        if (playerSpawnPoint == null)
+        if (playerSpawn == null)
             return;
 
-        float distance = playerSpawnPoint.position.x - transform.position.x;
+        float distance = playerSpawn.position.x - transform.position.x;
 
         // 도착
         if (Mathf.Abs(distance) <= arriveDistance)
