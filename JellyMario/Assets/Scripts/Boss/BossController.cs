@@ -1,8 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BossController : BossBase
 {
+    // 보스 시작 위치
+    [Header("Boss Start Position")]
+    [SerializeField] private Transform bossStartPoint;
+
     // 보스 중앙 위치
     [Header("Boss Position")]
     [SerializeField] private Transform centerPoint;
@@ -10,6 +15,9 @@ public class BossController : BossBase
     // 플레이어 시작 위치
     [Header("Player Spawn")]
     [SerializeField] private Transform playerSpawnPoint;
+
+    // 패턴 루틴 사용 여부
+    [SerializeField] private bool usePatternRoutine = true;
 
     // 페이즈1 - 이동
     [Header("Move")]
@@ -33,7 +41,8 @@ public class BossController : BossBase
     {
         base.Start();
 
-        StartCoroutine(BossPatternRoutine());
+        if (usePatternRoutine)
+            StartCoroutine(BossPatternRoutine());
     }
 
     private void FixedUpdate()
@@ -44,14 +53,18 @@ public class BossController : BossBase
         MoveToPlayerSpawn();
     }
 
+    // 디버그용 패턴 출력
+    private void Update()
+    {
+        DebugPattern();
+    }
+
     // 보스 패턴 순서
     private IEnumerator BossPatternRoutine()
     {
         yield return new WaitForSeconds(2f);
 
         yield return Pattern1_Move();
-
-        Teleport();
 
         yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
 
@@ -72,6 +85,12 @@ public class BossController : BossBase
     private IEnumerator Pattern1_Move()
     {
         Debug.Log("Pattern 1 : Move");
+
+        ResetBoss();
+
+        // 보스 시작 위치로 이동
+        if (bossStartPoint != null)
+            transform.position = bossStartPoint.position;
 
         if (playerSpawnPoint == null)
         {
@@ -101,6 +120,8 @@ public class BossController : BossBase
     private IEnumerator Pattern2_Breath()
     {
         Debug.Log("Pattern 2 : Breath");
+
+        Teleport();
 
         // 첫 번째 발사
         yield return FireBreath();
@@ -231,5 +252,49 @@ public class BossController : BossBase
         StartCoroutine(SpawnFireballLine(angle5));
 
         yield return null;
+    }
+
+    // 보스 상태 초기화
+    private void ResetBoss()
+    {
+        // 실행 중인 모든 코루틴 종료
+        StopAllCoroutines();
+
+        // 이동 중지
+        isMoving = false;
+
+        // 속도 초기화
+        rb.linearVelocity = Vector2.zero;
+
+        // 깜빡임 종료
+        spriteRenderer.enabled = true;
+    }
+
+    // 디버그용 패턴 실행
+    private void DebugPattern()
+    {
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+        {
+            ResetBoss();
+            StartCoroutine(Pattern1_Move());
+        }
+
+        if (Keyboard.current.digit2Key.wasPressedThisFrame)
+        {
+            ResetBoss();
+            StartCoroutine(Pattern2_Breath());
+        }
+
+        if (Keyboard.current.digit3Key.wasPressedThisFrame)
+        {
+            ResetBoss();
+            StartCoroutine(Pattern3_SpawnMonster());
+        }
+
+        if (Keyboard.current.digit4Key.wasPressedThisFrame)
+        {
+            ResetBoss();
+            StartCoroutine(Pattern4_SpawnTrap());
+        }
     }
 }
