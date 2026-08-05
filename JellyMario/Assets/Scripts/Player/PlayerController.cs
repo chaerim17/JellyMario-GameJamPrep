@@ -1,4 +1,5 @@
 ﻿using JellyMario.Core;
+using JellyMario.Jelly;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,6 +20,10 @@ namespace JellyMario.Player
         [SerializeField] private float jumpPower = 10f;
         [SerializeField] private float jumpDuration = 0.5f;
 
+        [Header("Jelly 설정")]
+        [SerializeField] private JellyVisual jellyVisual;
+        [SerializeField] private float jumpStretch = 0.15f;
+
         private Rigidbody2D _rigidbody;
         private bool _isGrounded;
         private Vector2 _moveInput;
@@ -29,6 +34,9 @@ namespace JellyMario.Player
             base.Initialize();
 
             _rigidbody = GetComponent<Rigidbody2D>();
+
+            if (jellyVisual == null)
+                jellyVisual = GetComponent<JellyVisual>();
 
             if (ManagersHub.Player != null)
                 ManagersHub.Player.RegisterPlayer(this);
@@ -85,6 +93,8 @@ namespace JellyMario.Player
             base.Jump();
 
             _rigidbody.linearVelocity = new Vector2(_rigidbody.linearVelocity.x, jumpPower);
+
+            jellyVisual?.Stretch(jumpStretch);
         }
 
         // 충돌 처리
@@ -99,6 +109,8 @@ namespace JellyMario.Player
                 if (contact.normal.y > 0.5f)
                 {
                     _isGrounded = true;
+
+                    jellyVisual?.ReactToImpact(contact.normal, collision.relativeVelocity.magnitude);
 
                     if (Mathf.Abs(_moveInput.x) <= 0.01f)
                         Idle();
