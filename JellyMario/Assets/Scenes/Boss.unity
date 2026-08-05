@@ -705,6 +705,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &524678293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 524678294}
+  m_Layer: 0
+  m_Name: MissileSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &524678294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524678293}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 7.325001, y: 20.71, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &564760673
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,6 +1422,12 @@ MonoBehaviour:
   - {fileID: 74748141}
   - {fileID: 1210467338}
   monsterPatternTime: 10
+  monsterSpawnDelay: 0.2
+  missilePrefab: {fileID: 561313405266786865, guid: 4098993d0512c334ea5767823fb594b3, type: 3}
+  missileSpawnPoint: {fileID: 524678294}
+  missileCount: 4
+  missileSpawnDelay: 2
+  missilePatternTime: 15
 --- !u!1 &982908993
 GameObject:
   m_ObjectHideFlags: 0
@@ -9486,6 +9523,7 @@ SceneRoots:
   - {fileID: 914803890}
   - {fileID: 1122310929}
   - {fileID: 1577053212}
+  - {fileID: 524678294}
   - {fileID: 1186447396}
   - {fileID: 493276150}
   - {fileID: 1035329376}

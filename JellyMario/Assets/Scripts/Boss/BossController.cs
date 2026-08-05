@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class BossController : BossBase
 {
@@ -43,6 +44,17 @@ public class BossController : BossBase
     [SerializeField] private Transform[] monsterSpawnPoints; // 몬스터 소환 위치 배열
     [SerializeField] private float monsterPatternTime = 10f; // 몬스터 패턴 지속 시간
     [SerializeField] private float monsterSpawnDelay = 0.2f; // 몬스터 소환 간격
+
+    // 페이즈2 패턴4 - 유도탄
+    [Header("Missile")]
+    [SerializeField] private GameObject missilePrefab;      // 유도탄 프리팹
+    [SerializeField] private Transform missileSpawnPoint;   // 유도탄 생성 위치
+    [SerializeField] private int missileCount = 4;          // 생성 개수
+    [SerializeField] private float missileSpawnDelay = 2f;  // 생성 간격
+    [SerializeField] private float missilePatternTime = 15f;// 패턴 지속 시간
+
+    // 생성된 유도탄
+    private readonly List<GameObject> missiles = new();
 
     protected override void Start()
     {
@@ -162,17 +174,26 @@ public class BossController : BossBase
         DecreaseHp();
     }
 
-    // 패턴4 : 함정 소환
+    // 패턴4 : 유도탄
     private IEnumerator Pattern4_SpawnTrap()
     {
-        Debug.Log("Pattern 4 : Spawn Trap");
+        Debug.Log("Pattern 4 : Homing Missile");
 
         ResetBoss();
         Teleport();
 
-        yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
+        yield return new WaitForSeconds(3f);
 
-        yield return new WaitForSeconds(5f);
+        yield return SpawnMissiles();
+
+        // 남은 시간 동안 생존
+        float remainTime =
+            missilePatternTime -
+            missileSpawnDelay * (missileCount - 1);
+
+        yield return new WaitForSeconds(remainTime);
+
+        DestroyMissiles();
 
         DecreaseHp();
     }
@@ -292,6 +313,42 @@ public class BossController : BossBase
         }
     }
 
+    // 유도탄 생성
+    private IEnumerator SpawnMissiles()
+    {
+        if (missilePrefab == null)
+            yield break;
+
+        if (missileSpawnPoint == null)
+            yield break;
+
+        for (int i = 0; i < missileCount; i++)
+        {
+            GameObject missile =
+             Instantiate(
+                 missilePrefab,
+                 missileSpawnPoint.position,
+                 Quaternion.identity);
+
+            missiles.Add(missile);
+
+            if (i < missileCount - 1)
+                yield return new WaitForSeconds(missileSpawnDelay);
+        }
+    }
+
+    // 생성된 유도탄 제거
+    private void DestroyMissiles()
+    {
+        foreach (GameObject missile in missiles)
+        {
+            if (missile != null)
+                Destroy(missile);
+        }
+
+        missiles.Clear();
+    }
+
     // 보스 상태 초기화
     private void ResetBoss()
     {
@@ -313,6 +370,9 @@ public class BossController : BossBase
             // 실행 중인 모든 코루틴 종료
             StopAllCoroutines();
             ResetBoss();
+
+            currentHp = 4;
+
             StartCoroutine(Pattern1_Move());
         }
 
@@ -321,6 +381,9 @@ public class BossController : BossBase
             // 실행 중인 모든 코루틴 종료
             StopAllCoroutines();
             ResetBoss();
+
+            currentHp = 3;
+
             StartCoroutine(Pattern2_Breath());
         }
 
@@ -329,6 +392,11 @@ public class BossController : BossBase
             // 실행 중인 모든 코루틴 종료
             StopAllCoroutines();
             ResetBoss();
+
+            currentHp = 2;
+
+
+            ChangeToPhase2(); // 보스 모습 변경
             StartCoroutine(Pattern3_SpawnMonster());
         }
 
@@ -337,6 +405,9 @@ public class BossController : BossBase
             // 실행 중인 모든 코루틴 종료
             StopAllCoroutines();
             ResetBoss();
+
+            currentHp = 1;
+
             StartCoroutine(Pattern4_SpawnTrap());
         }
     }
