@@ -19,7 +19,7 @@ public class BossController : BossBase
     // 패턴 루틴 사용 여부
     [SerializeField] private bool usePatternRoutine = true;
 
-    // 페이즈1 - 이동
+    // 페이즈1 패턴1 - 이동
     [Header("Move")]
     [SerializeField] private float moveSpeed = 8f; // 이동 속도
     [SerializeField] private float arriveDistance = 0.5f; // 도착 거리
@@ -29,13 +29,15 @@ public class BossController : BossBase
     // 이동 중인지 여부
     private bool isMoving = false;
 
-    // 페이즈1 - 브레스
+    // 페이즈1 패턴2 - 브레스
     [Header("Breath")]
     [SerializeField] private GameObject fireballPrefab; // 브레스 발사체 프리팹
     [SerializeField] private Transform breathSpawnPoint; // 브레스 발사 위치
     [SerializeField] private float breathDelay = 16f; // 브레스 발사 간격
     [SerializeField] private int fireballPerLine = 10; // 한 줄에 발사할 화염탄 개수
     [SerializeField] private float fireballSpacing = 1f; // 화염탄 간격
+
+    
 
     protected override void Start()
     {
@@ -67,6 +69,10 @@ public class BossController : BossBase
         yield return Pattern1_Move();
 
         yield return Pattern2_Breath();
+
+        // 2페이즈 진입
+        yield return Blink();
+        ChangeToPhase2(); // 보스 모습 변경
 
         yield return Pattern3_SpawnMonster();
 
@@ -129,7 +135,7 @@ public class BossController : BossBase
         yield return FireBreath();
 
         // 화염탄이 날아갈 시간
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(16f);
 
         DecreaseHp();
     }

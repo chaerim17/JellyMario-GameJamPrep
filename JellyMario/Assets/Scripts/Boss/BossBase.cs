@@ -11,6 +11,7 @@ public class BossBase : MonoBehaviour
 
     [Header("Idle Animation")]
     [SerializeField] protected Sprite[] idleSprites;
+    [SerializeField] protected Sprite[] phase2IdleSprites;
 
     [SerializeField] protected float animationSpeed = 0.2f;
 
@@ -110,5 +111,16 @@ public class BossBase : MonoBehaviour
 
             polygonCollider.SetPath(i, physicsShape);
         }
+    }
+
+    // 2페이즈로 변경
+    protected void ChangeToPhase2()
+    {
+        if (phase2IdleSprites == null || phase2IdleSprites.Length == 0)
+            return;
+
+        idleSprites = phase2IdleSprites;
+
+        PlayIdleAnimation();
     }
 }
