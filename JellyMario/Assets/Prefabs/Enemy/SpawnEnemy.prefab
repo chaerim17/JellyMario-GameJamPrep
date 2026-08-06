@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5057602669994124218}
   - component: {fileID: 74212297988840743}
-  - component: {fileID: 7511761856704506421}
   - component: {fileID: 3365734753614967609}
+  - component: {fileID: -6470247247272875207}
   m_Layer: 0
   m_Name: SpawnEnemy
   m_TagString: Untagged
@@ -94,8 +94,34 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!61 &7511761856704506421
-BoxCollider2D:
+--- !u!114 &3365734753614967609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1301543229036897812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22d253760d82a184182f62ab343665c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Enemy.SpawnEnemy
+  idleFrames:
+  - {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
+  idleFrameTime: 0.5
+  moveFrames:
+  - {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
+  moveFrameTime: 0.5
+  hitFrames: []
+  hitFrameTime: 0.5
+  dieFrames:
+  - {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
+  dieFrameTime: 0.5
+  riseHeight: 0.9
+  moveSpeed: 1
+  waitTime: 2
+--- !u!60 &-6470247247272875207
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -138,31 +164,12 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.0001, y: 0.0001}
-  m_EdgeRadius: 0
---- !u!114 &3365734753614967609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1301543229036897812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22d253760d82a184182f62ab343665c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Enemy.SpawnEnemy
-  idleFrames:
-  - {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
-  idleFrameTime: 0.5
-  moveFrames:
-  - {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
-  moveFrameTime: 0.5
-  hitFrames: []
-  hitFrameTime: 0.5
-  dieFrames:
-  - {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
-  dieFrameTime: 0.5
-  riseHeight: 0.9
-  moveSpeed: 1
-  waitTime: 2
+  m_Points:
+    m_Paths:
+    - - {x: -0.234375, y: 0.5}
+      - {x: -0.5, y: 0.359375}
+      - {x: -0.5, y: -0.5}
+      - {x: 0.5, y: -0.5}
+      - {x: 0.5, y: 0.28125}
+      - {x: 0.3125, y: 0.5}
+  m_UseDelaunayMesh: 1

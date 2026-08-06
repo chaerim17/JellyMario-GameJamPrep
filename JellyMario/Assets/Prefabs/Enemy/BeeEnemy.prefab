@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 1821035106639451813}
   - component: {fileID: 2933805583582179676}
   - component: {fileID: 6117914770109296790}
-  - component: {fileID: 2384229473941539516}
+  - component: {fileID: -6510841098610966909}
   m_Layer: 0
   m_Name: BeeEnemy
   m_TagString: Untagged
@@ -153,8 +153,8 @@ MonoBehaviour:
   dieFrameTime: 0.5
   moveRange: 3
   moveSpeed: 2
---- !u!58 &2384229473941539516
-CircleCollider2D:
+--- !u!60 &-6510841098610966909
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -188,7 +188,28 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.31
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.63, y: 0.42}
+    newSize: {x: 0.62, y: 0.53}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.305, y: -0.11}
+      - {x: 0.305, y: 0.14}
+      - {x: 0.24499999, y: 0.19999999}
+      - {x: -0.005, y: 0.19}
+      - {x: -0.24499999, y: 0.19999999}
+      - {x: -0.315, y: 0.11}
+      - {x: -0.315, y: 0}
+      - {x: -0.285, y: -0.13}
+      - {x: -0.195, y: -0.19999999}
+      - {x: 0.105, y: -0.19999999}
+  m_UseDelaunayMesh: 1
 --- !u!1 &7735999109066834750
 GameObject:
   m_ObjectHideFlags: 0
