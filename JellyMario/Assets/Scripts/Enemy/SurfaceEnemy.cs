@@ -7,6 +7,7 @@ namespace JellyMario.Enemy
     {
         [SerializeField] private Transform[] movePoints;
         [SerializeField] private float moveSpeed = 3f;
+        [SerializeField] private int direction = 1;
 
         private int _currentIndex;
 
@@ -19,25 +20,9 @@ namespace JellyMario.Enemy
 
         protected override void HandleMovement()
         {
-            if (movePoints == null || movePoints.Length == 0)
-                return;
-
-            Transform target = movePoints[_currentIndex];
-
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                target.position,
-                moveSpeed * Time.deltaTime);
-
-            if (Vector3.Distance(
-                transform.position,
-                target.position) < 0.05f)
-            {
-                _currentIndex++;
-
-                if (_currentIndex >= movePoints.Length)
-                    _currentIndex = 0;
-            }
+            transform.Translate(
+                Vector2.left *
+                (direction * moveSpeed * Time.deltaTime));
         }
     }
 }

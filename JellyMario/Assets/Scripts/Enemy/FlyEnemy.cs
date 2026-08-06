@@ -20,7 +20,7 @@ namespace JellyMario.Enemy
 
             if (_spriteRenderer != null)
             {
-                _spriteRenderer.flipX = direction == -1;
+                _spriteRenderer.flipX = direction < 0;
             }
 
             Move();
