@@ -14,11 +14,12 @@ namespace JellyMario.Player
     public class PlayerController : PlayerBase
     {
         [Header("Move 설정")]
-        [SerializeField] private float moveSpeed = 5f;
+        [SerializeField] private float moveSpeed = 60f;
+        [SerializeField] private float rotationAcceleration = 720f;
 
         [Header("Jump 설정")]
-        [SerializeField] private float jumpPower = 10f;
-        [SerializeField] private float jumpDuration = 0.5f;
+        [SerializeField] private float jumpPower = 15f;
+        [SerializeField] private Transform jumpDirection;
 
         [Header("Jelly 설정")]
         [SerializeField] private JellyVisual jellyVisual;
@@ -34,6 +35,9 @@ namespace JellyMario.Player
             base.Initialize();
 
             _rigidbody = GetComponent<Rigidbody2D>();
+
+            if (jumpDirection == null)
+                jumpDirection = transform;
 
             if (jellyVisual == null)
                 jellyVisual = GetComponent<JellyVisual>();
@@ -63,11 +67,13 @@ namespace JellyMario.Player
         // 플레이어 이동 처리
         protected override void HandleMovement()
         {
-            if (!_isGrounded)
-                return;
-            else if (Mathf.Abs(_moveInput.x) <= 0.01f)
+            if (Mathf.Abs(_moveInput.x) <= 0.01f)
             {
-                Idle();
+                _rigidbody.angularVelocity = Mathf.MoveTowards(_rigidbody.angularVelocity, 0f, rotationAcceleration * Time.deltaTime);
+
+                if (_isGrounded)
+                    Idle();
+
                 return;
             }
             else
@@ -82,9 +88,12 @@ namespace JellyMario.Player
         // 이동
         public override void Move()
         {
-            base.Move();
+            if (_isGrounded)
+                base.Move();
 
-            _rigidbody.linearVelocity = new Vector2(_moveInput.x * moveSpeed, _rigidbody.linearVelocity.y);
+            float targetAngularVelocity = -_moveInput.x * moveSpeed;
+
+            _rigidbody.angularVelocity = Mathf.MoveTowards(_rigidbody.angularVelocity, targetAngularVelocity, rotationAcceleration * Time.deltaTime);
         }
 
         // 점프
@@ -92,8 +101,12 @@ namespace JellyMario.Player
         {
             base.Jump();
 
-            _rigidbody.linearVelocity = new Vector2(_rigidbody.linearVelocity.x, jumpPower);
+            _isGrounded = false;
 
+            Vector2 jumpDirection = transform.up.normalized;
+
+            _rigidbody.linearVelocity = jumpDirection * jumpPower;
+            
             jellyVisual?.Stretch(jumpStretch);
         }
 

@@ -1453,13 +1453,12 @@ MonoBehaviour:
   - {fileID: 1435938718540855604, guid: 82dbb07095d30d94b8e0393109a44238, type: 3}
   - {fileID: 1368432470808120466, guid: 6d8161762184d454cb2e8ddc4f6633c6, type: 3}
   jumpFrameTime: 0.5
-  hitFrames: []
-  hitFrameTime: 0.5
   dieFrames: []
   dieFrameTime: 0.5
-  moveSpeed: 5
+  moveSpeed: 60
+  rotationAcceleration: 720
   jumpPower: 7
-  jumpDuration: 0.5
+  jumpDirection: {fileID: 0}
   jellyVisual: {fileID: 1182690440}
   jumpStretch: 0.15
 --- !u!50 &1182690438
@@ -1994,7 +1993,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1182690435}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

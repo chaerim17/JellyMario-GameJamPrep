@@ -17,13 +17,16 @@ namespace JellyMario.Jelly
         [Header("���� ����")]
         [SerializeField, Range(0f, 0.5f)]
         private float maxDeformation = 0.25f;
+
         [SerializeField, Min(0f)]
         private float impactResponse = 0.025f;
+
         private Vector3 _originalScale;
 
         // ���� ���� ũ�⿡�� �󸶳� �����ƴ��� ��Ÿ����.
         private Vector2 _deformation;
         // ������ ��� ���Ǵ� �ӵ���.
+
         private Vector2 _deformationVelocity;
 
         private void Awake()
@@ -97,7 +100,26 @@ namespace JellyMario.Jelly
             AddDeformation(new Vector2(amount, -amount));
         }
 
-        // ������Ʈ�� ��Ȱ��ȭ�Ǹ� ���� ������� ������.
+        // 충돌 방향에 맞춰 찌그러뜨린다.
+        public void ReactToImpact(Vector2 normal, float force)
+        {
+            float amount = ClampAmount(force * impactResponse);
+
+            if (Mathf.Abs(normal.y) >= Mathf.Abs(normal.x))
+            {
+                // 바닥 또는 천장과 충돌
+                Squash(amount);
+            }
+            else
+            {
+                // 벽과 충돌
+                AddDeformation(new Vector2(
+                    -amount,
+                    amount
+                ));
+            }
+        }
+
         private void AddDeformation(Vector2 amount)
         {
             _deformation += amount;

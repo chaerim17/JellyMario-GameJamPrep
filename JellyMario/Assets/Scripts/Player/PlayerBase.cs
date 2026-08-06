@@ -9,7 +9,6 @@ namespace JellyMario.Player
         Idle,
         Move,
         Jump,
-        Hit,
         Die
     }
 
@@ -27,10 +26,6 @@ namespace JellyMario.Player
         [Header("Jump 설정")]
         [SerializeField] private Sprite[] jumpFrames;
         [SerializeField] private float jumpFrameTime = 0.1f;
-
-        [Header("Hit 설정")]
-        [SerializeField] private Sprite[] hitFrames;
-        [SerializeField] private float hitFrameTime = 0.5f;
 
         [Header("Die 설정")]
         [SerializeField] private Sprite[] dieFrames;
@@ -97,12 +92,6 @@ namespace JellyMario.Player
             ChangeState(PlayerState.Jump);
         }
 
-        // 피격
-        public virtual void Hit()
-        {
-            ChangeState(PlayerState.Hit);
-        }
-
         // 사망
         public virtual void Die()
         {
@@ -131,11 +120,6 @@ namespace JellyMario.Player
                 case PlayerState.Jump:
                     selectedFrames = jumpFrames;
                     selectedFrameTime = jumpFrameTime;
-                    break;
-
-                case PlayerState.Hit:
-                    selectedFrames = hitFrames;
-                    selectedFrameTime = hitFrameTime;
                     break;
 
                 case PlayerState.Die:
