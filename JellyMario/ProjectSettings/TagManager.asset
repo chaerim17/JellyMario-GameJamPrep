@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Monster
   layers:
   - Default
   - TransparentFX
@@ -11,14 +12,14 @@ TagManager:
   - 
   - Water
   - UI
-  - Ground
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Hazard
+  - Goal Flag
+  - DeathZone
+  - Fireball
+  - Boss
+  - Player
+  - Monster
+  - Missile
   - 
   - 
   - 

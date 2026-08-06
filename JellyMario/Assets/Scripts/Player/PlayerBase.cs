@@ -24,6 +24,18 @@ namespace JellyMario.Player
         [SerializeField] private Sprite[] moveFrames;
         [SerializeField] private float moveFrameTime = 0.1f;
 
+        [Header("Jump 설정")]
+        [SerializeField] private Sprite[] jumpFrames;
+        [SerializeField] private float jumpFrameTime = 0.1f;
+
+        [Header("Hit 설정")]
+        [SerializeField] private Sprite[] hitFrames;
+        [SerializeField] private float hitFrameTime = 0.5f;
+
+        [Header("Die 설정")]
+        [SerializeField] private Sprite[] dieFrames;
+        [SerializeField] private float dieFrameTime = 0.5f;
+
         private SpriteRenderer _spriteRenderer;
         private Coroutine _animationCoroutine;
 
@@ -116,6 +128,21 @@ namespace JellyMario.Player
 
                     break;
 
+                case PlayerState.Jump:
+                    selectedFrames = jumpFrames;
+                    selectedFrameTime = jumpFrameTime;
+                    break;
+
+                case PlayerState.Hit:
+                    selectedFrames = hitFrames;
+                    selectedFrameTime = hitFrameTime;
+                    break;
+
+                case PlayerState.Die:
+                    selectedFrames = dieFrames;
+                    selectedFrameTime = dieFrameTime;
+                    break;
+
                 default:
                     Debug.LogWarning($"등록되지 않은 애니메이션: {state}", this);
 
@@ -128,9 +155,8 @@ namespace JellyMario.Player
                 return;
             }
 
-            if (_animationCoroutine != null) {
+            if (_animationCoroutine != null) 
                 StopCoroutine(_animationCoroutine);
-            }
 
             _animationCoroutine = StartCoroutine(PlayAnimation(selectedFrames, selectedFrameTime));
         }
