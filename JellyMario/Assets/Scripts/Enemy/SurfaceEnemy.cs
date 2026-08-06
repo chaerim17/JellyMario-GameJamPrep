@@ -1,16 +1,43 @@
+//표면 굴러다니는 적
 using UnityEngine;
 
-public class SurfaceEnemy : MonoBehaviour
+namespace JellyMario.Enemy
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class SurfaceEnemy : EnemyBase
     {
-        
-    }
+        [SerializeField] private Transform[] movePoints;
+        [SerializeField] private float moveSpeed = 3f;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private int _currentIndex;
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            Move();
+        }
+
+        protected override void HandleMovement()
+        {
+            if (movePoints == null || movePoints.Length == 0)
+                return;
+
+            Transform target = movePoints[_currentIndex];
+
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                target.position,
+                moveSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(
+                transform.position,
+                target.position) < 0.05f)
+            {
+                _currentIndex++;
+
+                if (_currentIndex >= movePoints.Length)
+                    _currentIndex = 0;
+            }
+        }
     }
 }
