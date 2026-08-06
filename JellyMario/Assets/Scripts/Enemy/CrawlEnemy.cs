@@ -9,7 +9,7 @@ namespace JellyMario.Enemy
         [SerializeField] private float moveRange = 5f;
 
         private Vector3 _startPosition;
-        private int _direction = 1;
+        private int _direction = -1;
 
         protected override void Awake()
         {
