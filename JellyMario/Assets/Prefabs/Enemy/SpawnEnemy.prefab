@@ -160,7 +160,8 @@ MonoBehaviour:
   moveFrameTime: 0.5
   hitFrames: []
   hitFrameTime: 0.5
-  dieFrames: []
+  dieFrames:
+  - {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
   dieFrameTime: 0.5
   riseHeight: 0.9
   moveSpeed: 1

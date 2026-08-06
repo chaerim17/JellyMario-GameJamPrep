@@ -84,7 +84,8 @@ MonoBehaviour:
   hitFrames:
   - {fileID: 3761383361637173429, guid: 8f8af4904d940dc4fb812dc9b93a59b3, type: 3}
   hitFrameTime: 0.5
-  dieFrames: []
+  dieFrames:
+  - {fileID: -1834428910051499608, guid: ea5a8b90aa4f17a4f96fbfeff465d6e3, type: 3}
   dieFrameTime: 0.5
   moveSpeed: 2
   launchForce: {x: -3, y: -2}

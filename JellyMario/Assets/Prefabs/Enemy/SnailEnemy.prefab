@@ -162,7 +162,8 @@ MonoBehaviour:
   hitFrames:
   - {fileID: 8045200227994657405, guid: 3af662b497d00d54d941262d6296439f, type: 3}
   hitFrameTime: 0.5
-  dieFrames: []
+  dieFrames:
+  - {fileID: 8045200227994657405, guid: 3af662b497d00d54d941262d6296439f, type: 3}
   dieFrameTime: 0.5
   moveSpeed: 2
   moveRange: 5

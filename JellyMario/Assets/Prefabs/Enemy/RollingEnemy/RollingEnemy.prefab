@@ -115,7 +115,8 @@ MonoBehaviour:
   moveFrameTime: 0.2
   hitFrames: []
   hitFrameTime: 0.5
-  dieFrames: []
+  dieFrames:
+  - {fileID: -937281917942298695, guid: 9aed22c0120fff54a9814101dee44405, type: 3}
   dieFrameTime: 0.5
   movePoints:
   - {fileID: 0}

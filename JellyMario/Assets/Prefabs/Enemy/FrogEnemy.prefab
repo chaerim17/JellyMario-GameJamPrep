@@ -212,7 +212,8 @@ MonoBehaviour:
   moveFrameTime: 0.5
   hitFrames: []
   hitFrameTime: 0.5
-  dieFrames: []
+  dieFrames:
+  - {fileID: -2090344530975614803, guid: c1aa9b949b4b5464ea0d609073f95870, type: 3}
   dieFrameTime: 0.5
   jumpPower: 11
   jumpDelay: 2
@@ -221,3 +222,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   checkRadius: 0.1
+  movePower: -3
