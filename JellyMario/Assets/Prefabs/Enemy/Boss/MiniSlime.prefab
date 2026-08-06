@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 165722317222901029}
   - component: {fileID: 8129603633482553891}
   - component: {fileID: 2244965182562554556}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: MiniSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}

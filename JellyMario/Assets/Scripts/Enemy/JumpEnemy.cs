@@ -10,7 +10,6 @@ namespace JellyMario.Enemy
         [SerializeField] private float jumpDelay = 2f;
 
         [SerializeField] private Transform groundCheck;
-        [SerializeField] private LayerMask groundLayer;
         [SerializeField] private float checkRadius = 0.1f;
 
         [SerializeField] private float movePower = -3f;
@@ -50,7 +49,7 @@ namespace JellyMario.Enemy
             return Physics2D.OverlapCircle(
                 groundCheck.position,
                 checkRadius,
-                groundLayer);
+                LayerMask.GetMask("Default"));
         }
     }
 }
