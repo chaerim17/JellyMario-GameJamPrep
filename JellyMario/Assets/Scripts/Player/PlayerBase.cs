@@ -73,7 +73,6 @@ namespace JellyMario.Player
             SetAnimation(CurrentState);
         }
 
-
         // 대기
         public virtual void Idle()
         {

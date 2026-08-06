@@ -26,7 +26,6 @@ namespace JellyMario.Player
         [SerializeField] private float jumpStretch = 0.15f;
 
         private Rigidbody2D _rigidbody;
-        private bool _isGrounded;
         private Vector2 _moveInput;
 
         // 플레이어 초기화
@@ -44,8 +43,6 @@ namespace JellyMario.Player
 
             if (ManagersHub.Player != null)
                 ManagersHub.Player.RegisterPlayer(this);
-
-            _isGrounded = true;
         }
 
         // 플레이어 입력 처리
@@ -60,7 +57,7 @@ namespace JellyMario.Player
 
             _moveInput = ManagersHub.Input.GetMoveInput();
 
-            if (_isGrounded && ManagersHub.Input.GetJumpInput())
+            if (ManagersHub.Input.GetJumpInput())
                 Jump();
         }
 
@@ -70,9 +67,6 @@ namespace JellyMario.Player
             if (Mathf.Abs(_moveInput.x) <= 0.01f)
             {
                 _rigidbody.angularVelocity = Mathf.MoveTowards(_rigidbody.angularVelocity, 0f, rotationAcceleration * Time.deltaTime);
-
-                if (_isGrounded)
-                    Idle();
 
                 return;
             }
@@ -88,9 +82,6 @@ namespace JellyMario.Player
         // 이동
         public override void Move()
         {
-            if (_isGrounded)
-                base.Move();
-
             float targetAngularVelocity = -_moveInput.x * moveSpeed;
 
             _rigidbody.angularVelocity = Mathf.MoveTowards(_rigidbody.angularVelocity, targetAngularVelocity, rotationAcceleration * Time.deltaTime);
@@ -101,10 +92,7 @@ namespace JellyMario.Player
         {
             base.Jump();
 
-            _isGrounded = false;
-
             Vector2 jumpDirection = transform.up.normalized;
-
             _rigidbody.linearVelocity = jumpDirection * jumpPower;
             
             jellyVisual?.Stretch(jumpStretch);
@@ -113,18 +101,36 @@ namespace JellyMario.Player
         // 충돌 처리
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            if (collision.contactCount == 0)
+                return;
+
+            ContactPoint2D strongestContact = collision.GetContact(0);
+            float strongestImpactSpeed = 0f;
+
+            // 접촉점이 여러 개라면 충격이 가장 강한 지점을 찾는다.
+            foreach (ContactPoint2D contact in collision.contacts)
+            {
+                float impactSpeed = Mathf.Abs(Vector2.Dot(collision.relativeVelocity, contact.normal));
+
+                if (impactSpeed > strongestImpactSpeed)
+                {
+                    strongestImpactSpeed = impactSpeed;
+                    strongestContact = contact;
+                }
+            }
+
+            // 벽, 바닥, 천장 등 모든 충돌에 젤리 반응
+            jellyVisual?.ReactToImpact(strongestContact.normal, strongestImpactSpeed);
+
+            // 아래부터는 Ground에 착지했을 때만 처리
             if (collision.gameObject.layer != LayerMask.NameToLayer("Ground"))
                 return;
 
             foreach (ContactPoint2D contact in collision.contacts)
             {
-                // 플레이어의 발밑에서 발생한 충돌인지 검사
+                // 플레이어 아래쪽에서 발생한 충돌
                 if (contact.normal.y > 0.5f)
                 {
-                    _isGrounded = true;
-
-                    jellyVisual?.ReactToImpact(contact.normal, collision.relativeVelocity.magnitude);
-
                     if (Mathf.Abs(_moveInput.x) <= 0.01f)
                         Idle();
                     else
@@ -140,18 +146,17 @@ namespace JellyMario.Player
         {
             int layer = other.gameObject.layer;
 
-            if (layer == LayerMask.NameToLayer("Hazard") ||
-                layer == LayerMask.NameToLayer("DeathZone"))
+            if (layer == LayerMask.NameToLayer("Hazard") || layer == LayerMask.NameToLayer("DeathZone"))
             {
                 Die();
+
                 return;
             }
 
             if (layer == LayerMask.NameToLayer("Goal Flag"))
-            {
                 StageClear();
-            }
         }
+
         public override void Die()
         {
             base.Die();
@@ -173,9 +178,7 @@ namespace JellyMario.Player
 
             // 다음 씬이 존재하면 이동
             if (nextScene < SceneManager.sceneCountInBuildSettings)
-            {
                 SceneManager.LoadScene(nextScene);
-            }
         }
     }
 }

@@ -271,7 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Camera.FollowCamera
   target: {fileID: 1182690435}
   followSpeed: 8
-  horizontalMargin: 4
+  horizontalMargin: 1
   verticalMargin: 2
 --- !u!1 &455276753
 GameObject:
@@ -1451,7 +1451,6 @@ MonoBehaviour:
   moveFrameTime: 0.5
   jumpFrames:
   - {fileID: 1435938718540855604, guid: 82dbb07095d30d94b8e0393109a44238, type: 3}
-  - {fileID: 1368432470808120466, guid: 6d8161762184d454cb2e8ddc4f6633c6, type: 3}
   jumpFrameTime: 0.5
   dieFrames: []
   dieFrameTime: 0.5
@@ -1537,11 +1536,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 649bc57af8d785d4f90cff09fc0a9821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellyVisual
+  deformationPivot: {fileID: 0}
   visual: {fileID: 1702830988}
   stiffness: 100
   damping: 12
   maxDeformation: 0.25
-  impactResponse: 0.025
+  impactResponse: 0.05
+  stretchMultiplier: 2
+  sideExpansion: 1.15
+  visualHalfSize: {x: 0.5, y: 0.5}
+  anchorStrength: 1
 --- !u!1 &1485459447
 GameObject:
   m_ObjectHideFlags: 0
@@ -2118,6 +2122,7 @@ GameObject:
   - component: {fileID: 2089156438}
   - component: {fileID: 2089156437}
   - component: {fileID: 2089156436}
+  - component: {fileID: 2089156439}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -90730,6 +90735,29 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!114 &2089156439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089156432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecd8cb97085ffd14a833fa14fda4e3bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellySurfaceWave
+  surfaceRenderer: {fileID: 0}
+  reactingLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  minimumImpactSpeed: 1
+  impactResponse: 0.025
+  maxImpactStrength: 0.15
+  impactFrequency: 5
+  impactSpeed: 8
+  impactFalloff: 1.5
+  impactDecay: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
