@@ -9,7 +9,6 @@ namespace JellyMario.Player
         Idle,
         Move,
         Jump,
-        Hit,
         Die
     }
 
@@ -27,10 +26,6 @@ namespace JellyMario.Player
         [Header("Jump 설정")]
         [SerializeField] private Sprite[] jumpFrames;
         [SerializeField] private float jumpFrameTime = 0.1f;
-
-        [Header("Hit 설정")]
-        [SerializeField] private Sprite[] hitFrames;
-        [SerializeField] private float hitFrameTime = 0.5f;
 
         [Header("Die 설정")]
         [SerializeField] private Sprite[] dieFrames;
@@ -78,7 +73,6 @@ namespace JellyMario.Player
             SetAnimation(CurrentState);
         }
 
-
         // 대기
         public virtual void Idle()
         {
@@ -95,12 +89,6 @@ namespace JellyMario.Player
         public virtual void Jump()
         {
             ChangeState(PlayerState.Jump);
-        }
-
-        // 피격
-        public virtual void Hit()
-        {
-            ChangeState(PlayerState.Hit);
         }
 
         // 사망
@@ -133,11 +121,6 @@ namespace JellyMario.Player
                     selectedFrameTime = jumpFrameTime;
                     break;
 
-                case PlayerState.Hit:
-                    selectedFrames = hitFrames;
-                    selectedFrameTime = hitFrameTime;
-                    break;
-
                 case PlayerState.Die:
                     selectedFrames = dieFrames;
                     selectedFrameTime = dieFrameTime;
@@ -149,7 +132,8 @@ namespace JellyMario.Player
                     return;
             }
 
-            if (selectedFrames == null || selectedFrames.Length == 0) {
+            if (selectedFrames == null || selectedFrames.Length == 0)
+            {
                 Debug.LogWarning($"{state} 이미지가 등록되지 않았습니다.", this);
 
                 return;
@@ -158,21 +142,35 @@ namespace JellyMario.Player
             if (_animationCoroutine != null) 
                 StopCoroutine(_animationCoroutine);
 
-            _animationCoroutine = StartCoroutine(PlayAnimation(selectedFrames, selectedFrameTime));
+            bool loop = state != PlayerState.Jump;
+
+            _animationCoroutine = StartCoroutine(PlayAnimation(selectedFrames, selectedFrameTime, state, loop));
         }
 
-        private IEnumerator PlayAnimation(Sprite[] frames, float frameTime)
+        private IEnumerator PlayAnimation(Sprite[] frames, float frameTime, PlayerState state, bool loop)
         {
             WaitForSeconds wait = new WaitForSeconds(frameTime);
 
-            while (true) {
-                foreach (Sprite frame in frames) {
-                    if (frame != null) 
+            do
+            {
+                foreach (Sprite frame in frames)
+                {
+                    if (frame != null)
                         _spriteRenderer.sprite = frame;
 
                     yield return wait;
                 }
             }
+            while (loop);
+
+            _animationCoroutine = null;
+
+            if (CurrentState == state)
+                OnAnimationFinished(state);
+        }
+
+        protected virtual void OnAnimationFinished(PlayerState state)
+        {
         }
     }
 }
