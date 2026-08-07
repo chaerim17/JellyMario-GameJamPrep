@@ -1,7 +1,8 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
+using JellyMario.UI;
 
 public class BossController : BossBase
 {
@@ -57,9 +58,14 @@ public class BossController : BossBase
     // 생성된 유도탄
     private readonly List<GameObject> missiles = new();
 
+    // 보스 UI
+    [SerializeField] private BossUI bossUI;
+
     protected override void Start()
     {
         base.Start();
+
+        bossUI.SetProgress(1f);
 
         if (usePatternRoutine)
             StartCoroutine(BossPatternRoutine());
@@ -84,17 +90,17 @@ public class BossController : BossBase
     {
         yield return new WaitForSeconds(2f);
 
-        yield return Pattern1_Move();
+        yield return StartPattern(0, GetPattern1Duration(), Pattern1_Move());
 
-        yield return Pattern2_Breath();
+        yield return StartPattern(1, 35f, Pattern2_Breath());
 
         // 2페이즈 진입
         yield return Blink();
         ChangeToPhase2(); // 보스 모습 변경
 
-        yield return Pattern3_SpawnMonster();
+        yield return StartPattern(2, 14f, Pattern3_SpawnMonster());
 
-        yield return Pattern4_SpawnTrap();
+        yield return StartPattern(3, 18f, Pattern4_SpawnTrap());
 
         Die();
     }
@@ -386,7 +392,8 @@ public class BossController : BossBase
 
             currentHp = 4;
 
-            StartCoroutine(Pattern1_Move());
+            bossUI.SetProgress(1f);
+            StartCoroutine(StartPattern(0, GetPattern1Duration(), Pattern1_Move()));
         }
 
         if (Keyboard.current.digit2Key.wasPressedThisFrame)
@@ -397,7 +404,8 @@ public class BossController : BossBase
 
             currentHp = 3;
 
-            StartCoroutine(Pattern2_Breath());
+            bossUI.SetProgress(0.75f);
+            StartCoroutine(StartPattern(1, 35f, Pattern2_Breath()));
         }
 
         if (Keyboard.current.digit3Key.wasPressedThisFrame)
@@ -410,7 +418,8 @@ public class BossController : BossBase
 
 
             ChangeToPhase2(); // 보스 모습 변경
-            StartCoroutine(Pattern3_SpawnMonster());
+            bossUI.SetProgress(0.5f);
+            StartCoroutine(StartPattern(2, 14f, Pattern3_SpawnMonster()));
         }
 
         if (Keyboard.current.digit4Key.wasPressedThisFrame)
@@ -422,7 +431,34 @@ public class BossController : BossBase
             currentHp = 1;
 
             ChangeToPhase2(); // 보스 모습 변경
-            StartCoroutine(Pattern4_SpawnTrap());
+            bossUI.SetProgress(0.25f);
+            StartCoroutine(StartPattern(3, 18f, Pattern4_SpawnTrap()));
         }
+    }
+
+    // 보스 UI 진행률 업데이트
+    private IEnumerator StartPattern(int patternIndex, float duration, IEnumerator patternCoroutine)
+    {
+        float startValue = 1f - patternIndex * 0.25f;
+        float endValue = startValue - 0.25f;
+
+        StartCoroutine(bossUI.UpdateProgress(startValue, endValue, duration));
+
+        yield return StartCoroutine(patternCoroutine);
+
+        bossUI.SetProgress(endValue);
+    }
+
+    // 패턴1 지속 시간 계산
+    private float GetPattern1Duration()
+    {
+        float distance =
+            Mathf.Abs(
+                playerSpawnPoint.position.x -
+                bossStartPoint.position.x);
+
+        float moveTime = distance / moveSpeed;
+
+        return moveTime + blinkDuration;
     }
 }
