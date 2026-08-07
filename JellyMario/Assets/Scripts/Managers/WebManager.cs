@@ -19,6 +19,8 @@ namespace JellyMario.Managers
         // DB 주소와 Publishable Key
         private const string API_URL =
             "https://ifobygojapncuwpwfvwt.supabase.co/rest/v1/ranking";
+        private const string PLAYER_API_URL =
+            "https://ifobygojapncuwpwfvwt.supabase.co/rest/v1/player";
 
         private const string API_KEY =
             "sb_publishable_CeTXneXavNVq9EXdq4N9VQ_qvWSh2B1";
@@ -149,6 +151,27 @@ namespace JellyMario.Managers
                     $"{ranking.playerName} : {ranking.clearTime}"
                 );
             }
+        }
+
+        public void SubmitProfile(string playerName, int characterId)
+        {
+            SubmitProfileRequest requestData =
+                new SubmitProfileRequest();
+
+            requestData.playerName = playerName;
+            requestData.characterId = characterId;
+
+            string jsonData =
+                JsonUtility.ToJson(requestData);
+
+            StartCoroutine(
+                SendPostRequest(
+                    PLAYER_API_URL,
+                    jsonData
+                )
+            );
+
+            Debug.Log(jsonData);
         }
     }
 }
