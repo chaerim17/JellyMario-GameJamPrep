@@ -1538,8 +1538,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellyVisual
   deformationPivot: {fileID: 0}
   visual: {fileID: 1702830988}
-  stiffness: 100
-  damping: 12
+  stiffness: 60
+  damping: 7
   maxDeformation: 0.25
   impactResponse: 0.05
   stretchMultiplier: 2
@@ -2171,7 +2171,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 74d75f7b0df44eecaaf59a3fb6e67a21, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -90747,17 +90747,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecd8cb97085ffd14a833fa14fda4e3bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellySurfaceWave
-  surfaceRenderer: {fileID: 0}
+  surfaceRenderer: {fileID: 2089156434}
   reactingLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  minimumImpactSpeed: 1
-  impactResponse: 0.025
-  maxImpactStrength: 0.15
-  impactFrequency: 5
-  impactSpeed: 8
-  impactFalloff: 1.5
-  impactDecay: 1
+  minimumImpactSpeed: 0.8
+  impactResponse: 0.08
+  maxImpactStrength: 0.5
+  impactCooldown: 0.4
+  visualWaveDuration: 2.8
+  concurrentWaveLimit: 4
+  minimumContactSeparation: 0.75
+  impactFrequency: 1.2
+  impactSpeed: 1.5
+  impactFalloff: 0.25
+  impactDecay: 0.6
+  visualWaveHeight: 1.6
+  maxCombinedVisualOffset: 1.25
+  animateTileCollider: 1
+  surfaceTilemap: {fileID: 2089156435}
+  tilemapCollider: {fileID: 2089156438}
+  colliderWaveRadius: 6
+  colliderWaveHeight: 0.12
+  colliderWaveTravelSpeed: 2.5
+  colliderWaveFrequency: 2.8
+  colliderWaveDecay: 1
+  colliderDistanceFalloff: 0.18
+  maxCombinedColliderOffset: 0.35
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

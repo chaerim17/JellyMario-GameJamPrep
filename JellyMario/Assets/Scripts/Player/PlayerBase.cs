@@ -132,7 +132,8 @@ namespace JellyMario.Player
                     return;
             }
 
-            if (selectedFrames == null || selectedFrames.Length == 0) {
+            if (selectedFrames == null || selectedFrames.Length == 0)
+            {
                 Debug.LogWarning($"{state} 이미지가 등록되지 않았습니다.", this);
 
                 return;
@@ -141,21 +142,35 @@ namespace JellyMario.Player
             if (_animationCoroutine != null) 
                 StopCoroutine(_animationCoroutine);
 
-            _animationCoroutine = StartCoroutine(PlayAnimation(selectedFrames, selectedFrameTime));
+            bool loop = state != PlayerState.Jump;
+
+            _animationCoroutine = StartCoroutine(PlayAnimation(selectedFrames, selectedFrameTime, state, loop));
         }
 
-        private IEnumerator PlayAnimation(Sprite[] frames, float frameTime)
+        private IEnumerator PlayAnimation(Sprite[] frames, float frameTime, PlayerState state, bool loop)
         {
             WaitForSeconds wait = new WaitForSeconds(frameTime);
 
-            while (true) {
-                foreach (Sprite frame in frames) {
-                    if (frame != null) 
+            do
+            {
+                foreach (Sprite frame in frames)
+                {
+                    if (frame != null)
                         _spriteRenderer.sprite = frame;
 
                     yield return wait;
                 }
             }
+            while (loop);
+
+            _animationCoroutine = null;
+
+            if (CurrentState == state)
+                OnAnimationFinished(state);
+        }
+
+        protected virtual void OnAnimationFinished(PlayerState state)
+        {
         }
     }
 }

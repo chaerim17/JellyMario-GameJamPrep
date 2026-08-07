@@ -14,7 +14,7 @@ namespace JellyMario.Player
     public class PlayerController : PlayerBase
     {
         [Header("Move 설정")]
-        [SerializeField] private float moveSpeed = 60f;
+        [SerializeField] private float moveSpeed = 30f;
         [SerializeField] private float rotationAcceleration = 720f;
 
         [Header("Jump 설정")]
@@ -23,7 +23,7 @@ namespace JellyMario.Player
 
         [Header("Jelly 설정")]
         [SerializeField] private JellyVisual jellyVisual;
-        [SerializeField] private float jumpStretch = 0.15f;
+        [SerializeField] private float jumpStretch = 0.1f;
 
         private Rigidbody2D _rigidbody;
         private Vector2 _moveInput;
@@ -64,14 +64,23 @@ namespace JellyMario.Player
         // 플레이어 이동 처리
         protected override void HandleMovement()
         {
-            if (Mathf.Abs(_moveInput.x) <= 0.01f)
+            // Jump 애니메이션 중에도 회전 조작은 유지하되,
+            // 애니메이션 상태는 Move로 즉시 바꾸지 않는다.
+            if (CurrentState == PlayerState.Jump)
             {
-                _rigidbody.angularVelocity = Mathf.MoveTowards(_rigidbody.angularVelocity, 0f, rotationAcceleration * Time.deltaTime);
+                UpdateRotation();
 
                 return;
             }
-            else
-                Move();
+
+            if (Mathf.Abs(_moveInput.x) <= 0.01f)
+            {
+                UpdateRotation();
+                Idle();
+                return;
+            }
+
+            Move();
         }
 
         public override void Idle()
@@ -82,9 +91,30 @@ namespace JellyMario.Player
         // 이동
         public override void Move()
         {
-            float targetAngularVelocity = -_moveInput.x * moveSpeed;
+            base.Move();
+            UpdateRotation();
+        }
+
+        private void UpdateRotation()
+        {
+            float targetAngularVelocity = Mathf.Abs(_moveInput.x) <= 0.01f
+                ? 0f
+                : -_moveInput.x * moveSpeed;
 
             _rigidbody.angularVelocity = Mathf.MoveTowards(_rigidbody.angularVelocity, targetAngularVelocity, rotationAcceleration * Time.deltaTime);
+        }
+
+        protected override void OnAnimationFinished(PlayerState state)
+        {
+            base.OnAnimationFinished(state);
+
+            if (state != PlayerState.Jump)
+                return;
+
+            if (Mathf.Abs(_moveInput.x) <= 0.01f)
+                Idle();
+            else
+                Move();
         }
 
         // 점프
@@ -94,7 +124,7 @@ namespace JellyMario.Player
 
             Vector2 jumpDirection = transform.up.normalized;
             _rigidbody.linearVelocity = jumpDirection * jumpPower;
-            
+
             jellyVisual?.Stretch(jumpStretch);
         }
 
