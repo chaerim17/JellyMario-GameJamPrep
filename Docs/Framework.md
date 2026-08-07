@@ -19,9 +19,9 @@ Assets
 ├── Materials
 ├── Prefabs
 │   ├── BossPattern
+│   │   ├── BossSlime
 │   │   ├── Fireball
-│   │   ├── Missile
-│   │   └── Monster
+│   │   └── Missile
 │   ├── Enemy
 │   │   ├── BeeEnemy
 │   │   ├── BlockEnemy
@@ -42,9 +42,9 @@ Assets
 │   ├── Boss
 │   │   ├── BossBase.cs
 │   │   ├── BossController.cs
+│   │   ├── BossSlimeController.cs
 │   │   ├── FireballController.cs
-│   │   ├── MissileController.cs
-│   │   └── MonsterController.cs
+│   │   └── MissileController.cs
 │   │
 │   ├── Camera
 │   │   └── FollowCamera.cs

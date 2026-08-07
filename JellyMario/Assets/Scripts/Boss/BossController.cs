@@ -361,6 +361,18 @@ public class BossController : BossBase
 
         // 깜빡임 종료
         spriteRenderer.enabled = true;
+
+        // 생성된 유도탄 제거
+        DestroyMissiles();
+
+        // 생성된 몬스터 제거
+        BossSlimeController[] slimes = FindObjectsByType<BossSlimeController>();
+
+        foreach (BossSlimeController slime in slimes)
+        {
+            slime.Die();
+        }
+
     }
 
     // 디버그용 패턴 실행
@@ -409,6 +421,7 @@ public class BossController : BossBase
 
             currentHp = 1;
 
+            ChangeToPhase2(); // 보스 모습 변경
             StartCoroutine(Pattern4_SpawnTrap());
         }
     }
