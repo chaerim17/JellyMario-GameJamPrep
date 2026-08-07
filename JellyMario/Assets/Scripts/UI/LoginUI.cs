@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using JellyMario.Managers;
 
 namespace JellyMario.UI
 {
@@ -19,6 +20,13 @@ namespace JellyMario.UI
         {
             base.Initialize();
             SelectCharacter(0);
+        }
+
+        // Test 이후 init 다른 곳에서 호출시 제거
+        private void Start()
+        {
+            Initialize();
+            Show();
         }
 
         public void SelectCharacter(int index)
@@ -43,6 +51,9 @@ namespace JellyMario.UI
 
         public void OnClickStart()
         {
+            Debug.Log($"WebManager = {WebManager.Instance}");
+            Debug.Log("Start 버튼 눌림");
+
             if (selectedCharacter == -1)
             {
                 Debug.LogWarning("캐릭터를 선택해주세요.");
@@ -57,11 +68,10 @@ namespace JellyMario.UI
                 return;
             }
 
-            // TODO: DB에 선택 캐릭터 저장
-            // ex) PlayerData.CharacterType = selectedCharacter;
-
-            // TODO: DB에 닉네임 저장
-            // ex) PlayerData.Nickname = nickname;
+            Debug.Log($"WebManager = {WebManager.Instance}");
+           
+            // DB에 선택 캐릭터와 닉네임 전송
+            WebManager.Instance.SubmitProfile(nickname, selectedCharacter);
 
             // TODO: 타이머 시작
             // TimerManager.Instance.StartTimer();
