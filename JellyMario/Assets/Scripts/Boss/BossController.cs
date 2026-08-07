@@ -92,15 +92,15 @@ public class BossController : BossBase
 
         yield return StartPattern(0, GetPattern1Duration(), Pattern1_Move());
 
-        yield return StartPattern(1, 35f, Pattern2_Breath());
+        yield return StartPattern(1, GetPattern2Duration(), Pattern2_Breath());
 
         // 2페이즈 진입
         yield return Blink();
         ChangeToPhase2(); // 보스 모습 변경
 
-        yield return StartPattern(2, 14f, Pattern3_SpawnMonster());
+        yield return StartPattern(2, GetPattern3Duration(), Pattern3_SpawnMonster());
 
-        yield return StartPattern(3, 18f, Pattern4_SpawnTrap());
+        yield return StartPattern(3, GetPattern4Duration(), Pattern4_SpawnTrap());
 
         Die();
     }
@@ -145,7 +145,6 @@ public class BossController : BossBase
     {
         Debug.Log("Pattern 2 : Breath");
 
-        ResetBoss();
         Teleport();
 
         yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
@@ -169,11 +168,16 @@ public class BossController : BossBase
     {
         Debug.Log("Pattern 3 : Spawn Monster");
 
-        ResetBoss();
         Teleport();
 
         yield return new WaitForSeconds(3f); // 다음 패턴 전 대기 시간
 
+        // 첫 번째 소환
+        yield return SpawnMonsters();
+
+        yield return new WaitForSeconds(breathDelay);
+
+        // 두 번째 소환
         yield return SpawnMonsters();
 
         yield return new WaitForSeconds(monsterPatternTime);
@@ -186,17 +190,22 @@ public class BossController : BossBase
     {
         Debug.Log("Pattern 4 : Homing Missile");
 
-        ResetBoss();
         Teleport();
 
         yield return new WaitForSeconds(3f);
 
+        // 첫 번째 유도탄 생성
         yield return SpawnMissiles();
 
+        yield return new WaitForSeconds(breathDelay);
+
+        // 두 번째 유도탄 생성
+        yield return SpawnMissiles();
+
+        yield return new WaitForSeconds(monsterPatternTime);
+
         // 남은 시간 동안 생존
-        float remainTime =
-            missilePatternTime -
-            missileSpawnDelay * (missileCount - 1);
+        float remainTime = missilePatternTime - missileSpawnDelay * (missileCount - 1);
 
         yield return new WaitForSeconds(remainTime);
 
@@ -405,7 +414,7 @@ public class BossController : BossBase
             currentHp = 3;
 
             bossUI.SetProgress(0.75f);
-            StartCoroutine(StartPattern(1, 35f, Pattern2_Breath()));
+            StartCoroutine(StartPattern(1, GetPattern2Duration(), Pattern2_Breath()));
         }
 
         if (Keyboard.current.digit3Key.wasPressedThisFrame)
@@ -419,7 +428,7 @@ public class BossController : BossBase
 
             ChangeToPhase2(); // 보스 모습 변경
             bossUI.SetProgress(0.5f);
-            StartCoroutine(StartPattern(2, 14f, Pattern3_SpawnMonster()));
+            StartCoroutine(StartPattern(2, GetPattern3Duration(), Pattern3_SpawnMonster()));
         }
 
         if (Keyboard.current.digit4Key.wasPressedThisFrame)
@@ -432,7 +441,7 @@ public class BossController : BossBase
 
             ChangeToPhase2(); // 보스 모습 변경
             bossUI.SetProgress(0.25f);
-            StartCoroutine(StartPattern(3, 18f, Pattern4_SpawnTrap()));
+            StartCoroutine(StartPattern(3, GetPattern4Duration(), Pattern4_SpawnTrap()));
         }
     }
 
@@ -452,13 +461,42 @@ public class BossController : BossBase
     // 패턴1 지속 시간 계산
     private float GetPattern1Duration()
     {
-        float distance =
-            Mathf.Abs(
-                playerSpawnPoint.position.x -
-                bossStartPoint.position.x);
+        float distance = Mathf.Abs(playerSpawnPoint.position.x - bossStartPoint.position.x);
 
         float moveTime = distance / moveSpeed;
 
         return moveTime + blinkDuration;
+    }
+
+    // 패턴2 지속 시간 계산
+    private float GetPattern2Duration()
+    {
+        return 3f + breathDelay + 16f;
+    }
+
+    // 패턴3 지속 시간 계산
+    private float GetPattern3Duration()
+    {
+        float spawnTime =
+            monsterSpawnPoints.Length * monsterSpawnDelay;
+
+        return 3f
+            + spawnTime
+            + breathDelay
+            + spawnTime
+            + monsterPatternTime;
+    }
+
+    // 패턴4 지속 시간 계산
+    private float GetPattern4Duration()
+    {
+        float spawnTime =
+            (missileCount - 1) * missileSpawnDelay;
+
+        return 3f
+            + breathDelay
+            + monsterPatternTime
+            + missilePatternTime
+            + spawnTime;
     }
 }
