@@ -15,18 +15,18 @@ namespace JellyMario.Jelly
 
         [Header("스프링 설정")]
         [SerializeField, Min(0f)] private float stiffness = 100f;
-        [SerializeField, Min(0f)] private float damping = 12f;
+        [SerializeField, Min(0f)] private float damping = 7f;
 
         [Header("변형 설정")]
-        [SerializeField, Range(0f, 0.5f)]
-        private float maxDeformation = 0.25f;
+        [SerializeField, Range(0.2f, 0.7f)]
+        private float maxDeformation = 0.5f;
 
         [SerializeField, Min(0f)]
-        private float impactResponse = 0.025f;
+        private float impactResponse = 0.045f;
 
         [Tooltip("압축 뒤 반동으로 늘어날 때의 크기입니다.")]
         [SerializeField, Range(1f, 3f)]
-        private float stretchMultiplier = 1.5f;
+        private float stretchMultiplier = 2f;
 
         [Tooltip("눌릴 때 양옆으로 부풀리는 정도입니다.")]
         [SerializeField, Range(0f, 2f)]

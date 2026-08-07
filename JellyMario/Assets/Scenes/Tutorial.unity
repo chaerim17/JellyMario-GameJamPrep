@@ -1450,16 +1450,16 @@ MonoBehaviour:
   - {fileID: -3407604588732083731, guid: d890e453bd81b83489cd62edc8b129a0, type: 3}
   moveFrameTime: 0.5
   jumpFrames:
-  - {fileID: 1435938718540855604, guid: 82dbb07095d30d94b8e0393109a44238, type: 3}
+  - {fileID: 1368432470808120466, guid: 6d8161762184d454cb2e8ddc4f6633c6, type: 3}
   jumpFrameTime: 0.5
   dieFrames: []
   dieFrameTime: 0.5
-  moveSpeed: 60
+  moveSpeed: 30
   rotationAcceleration: 720
-  jumpPower: 7
+  jumpPower: 5
   jumpDirection: {fileID: 0}
   jellyVisual: {fileID: 1182690440}
-  jumpStretch: 0.15
+  jumpStretch: 0.1
 --- !u!50 &1182690438
 Rigidbody2D:
   serializedVersion: 5
@@ -1538,12 +1538,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellyVisual
   deformationPivot: {fileID: 0}
   visual: {fileID: 1702830988}
-  stiffness: 60
+  stiffness: 100
   damping: 7
-  maxDeformation: 0.25
-  impactResponse: 0.05
+  maxDeformation: 0.5
+  impactResponse: 0.045
   stretchMultiplier: 2
-  sideExpansion: 1.15
+  sideExpansion: 1.5
   visualHalfSize: {x: 0.5, y: 0.5}
   anchorStrength: 1
 --- !u!1 &1485459447
@@ -90755,7 +90755,7 @@ MonoBehaviour:
   impactResponse: 0.08
   maxImpactStrength: 0.5
   impactCooldown: 0.4
-  visualWaveDuration: 2.8
+  visualWaveDuration: 3
   concurrentWaveLimit: 4
   minimumContactSeparation: 0.75
   impactFrequency: 1.2

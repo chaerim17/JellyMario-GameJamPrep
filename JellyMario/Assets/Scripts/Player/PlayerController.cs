@@ -18,7 +18,7 @@ namespace JellyMario.Player
         [SerializeField] private float rotationAcceleration = 720f;
 
         [Header("Jump 설정")]
-        [SerializeField] private float jumpPower = 15f;
+        [SerializeField] private float jumpPower = 5f;
         [SerializeField] private Transform jumpDirection;
 
         [Header("Jelly 설정")]

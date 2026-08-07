@@ -25,7 +25,7 @@ namespace JellyMario.Jelly
         [SerializeField, Min(0f)] private float impactCooldown = 0.4f;
 
         [Tooltip("하나의 파동이 유지되는 시간")]
-        [SerializeField, Min(0.01f)] private float visualWaveDuration = 2.8f;
+        [SerializeField, Min(0.01f)] private float visualWaveDuration = 3f;
 
         [Tooltip("동시에 유지할 충돌 파동 개수")]
         [SerializeField, Range(1, ShaderWaveSlotCount)]
