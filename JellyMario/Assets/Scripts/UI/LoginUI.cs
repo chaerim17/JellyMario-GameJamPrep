@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using JellyMario.Managers;
+using UnityEngine.SceneManagement;
 
 namespace JellyMario.UI
 {
@@ -76,9 +77,13 @@ namespace JellyMario.UI
             // TODO: 타이머 시작
             // TimerManager.Instance.StartTimer();
 
-            // TODO: 씬 담당자
-            // 여기서 다음 씬 이동 호출 부탁드립니다.
-            // ex) SceneManager.LoadScene("GameScene");
+            // 다음 씬 이동
+            int currentIndex = SceneManager.GetActiveScene().buildIndex;
+
+            if (currentIndex + 1 < SceneManager.sceneCountInBuildSettings)
+            {
+                SceneManager.LoadScene(currentIndex + 1);
+            }
 
             Debug.Log($"닉네임: {nickname}");
             Debug.Log($"선택 캐릭터: {selectedCharacter}");

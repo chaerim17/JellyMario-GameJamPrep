@@ -184,7 +184,10 @@ namespace JellyMario.Player
             }
 
             if (layer == LayerMask.NameToLayer("Goal Flag"))
-                StageClear();
+            {
+                if (SceneManager.GetActiveScene().name != "MainMenu")
+                    StageClear();
+            }
         }
 
         public override void Die()
