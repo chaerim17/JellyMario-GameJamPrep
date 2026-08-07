@@ -345,7 +345,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2062587010338657807}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7154323876556702187}
+        m_TargetAssemblyTypeName: JellyMario.UI.LoginUI, Assembly-CSharp
+        m_MethodName: SelectCharacter
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7687175881238316168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -556,7 +568,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5160480572006291363}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7154323876556702187}
+        m_TargetAssemblyTypeName: JellyMario.UI.LoginUI, Assembly-CSharp
+        m_MethodName: SelectCharacter
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5852162746887002825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -810,6 +834,7 @@ GameObject:
   - component: {fileID: 767158201288300233}
   - component: {fileID: 4881762410311054089}
   - component: {fileID: 650585017153679127}
+  - component: {fileID: 7154323876556702187}
   m_Layer: 5
   m_Name: LoginPanel
   m_TagString: Untagged
@@ -911,6 +936,31 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+--- !u!114 &7154323876556702187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492404490116584849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e179f3afb90664f8d26797085b5e98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.UI.LoginUI
+  characterButtons:
+  - {fileID: 3081027038517978803}
+  - {fileID: 5524194028023061806}
+  - {fileID: 4535316896329270025}
+  - {fileID: 2420514648067239318}
+  - {fileID: 5197137297072233275}
+  outlines:
+  - {fileID: 3689244232180893895}
+  - {fileID: 2544320600131721612}
+  - {fileID: 3850910001099514053}
+  - {fileID: 5852162746887002825}
+  - {fileID: 7687175881238316168}
+  nicknameInput: {fileID: 9200328618259608365}
 --- !u!1 &1602121188634236337
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,7 +1081,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4428464746398903682}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7154323876556702187}
+        m_TargetAssemblyTypeName: JellyMario.UI.LoginUI, Assembly-CSharp
+        m_MethodName: SelectCharacter
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2544320600131721612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3267,7 +3329,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7768005732036754505}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7154323876556702187}
+        m_TargetAssemblyTypeName: JellyMario.UI.LoginUI, Assembly-CSharp
+        m_MethodName: OnClickStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3632778254247855971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4945,7 +5019,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5869182210278705806}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7154323876556702187}
+        m_TargetAssemblyTypeName: JellyMario.UI.LoginUI, Assembly-CSharp
+        m_MethodName: SelectCharacter
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3689244232180893895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5518,7 +5604,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5758960733274097717}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7154323876556702187}
+        m_TargetAssemblyTypeName: JellyMario.UI.LoginUI, Assembly-CSharp
+        m_MethodName: SelectCharacter
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3850910001099514053
 MonoBehaviour:
   m_ObjectHideFlags: 0
