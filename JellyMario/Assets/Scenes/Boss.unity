@@ -1012,25 +1012,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8564f74405da6314eac6d58b9a4d1986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Player.PlayerController
-  idleFrames:
-  - {fileID: -8455583299059481146, guid: c075f519ffa698a449a2aa0616ece11c, type: 3}
-  - {fileID: -6511610701255145038, guid: 8592cc1dfbbfecf44ae33a822dc60ee1, type: 3}
+  idleFrames: []
   idleFrameTime: 0.5
-  moveFrames:
-  - {fileID: 3280627239212314219, guid: 509f3fa3c1b84044fa3fab2908edbce4, type: 3}
-  - {fileID: -3407604588732083731, guid: d890e453bd81b83489cd62edc8b129a0, type: 3}
-  moveFrameTime: 0.5
-  jumpFrames:
-  - {fileID: 1435938718540855604, guid: 82dbb07095d30d94b8e0393109a44238, type: 3}
-  - {fileID: 1368432470808120466, guid: 6d8161762184d454cb2e8ddc4f6633c6, type: 3}
-  jumpFrameTime: 0.5
-  hitFrames: []
-  hitFrameTime: 0.5
+  moveFrames: []
+  moveFrameTime: 0.1
+  jumpFrames: []
+  jumpFrameTime: 0.1
   dieFrames: []
   dieFrameTime: 0.5
-  moveSpeed: 5
-  jumpPower: 7
-  jumpDuration: 0.5
+  moveSpeed: 30
+  rotationAcceleration: 720
+  jumpPower: 5
+  jumpDirection: {fileID: 0}
+  jellyVisual: {fileID: 0}
+  jumpStretch: 0.1
 --- !u!212 &656695132
 SpriteRenderer:
   serializedVersion: 3
