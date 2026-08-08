@@ -30,7 +30,7 @@ namespace JellyMario.Managers
         {
             Debug.Log("WebManager Initialize");
             //TestPostConnection();
-            GetRanking();
+            //GetRanking();
 
         }
 
