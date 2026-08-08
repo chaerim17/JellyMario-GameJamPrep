@@ -261,10 +261,7 @@ namespace JellyMario.Jelly
             });
         }
 
-        public void PlayRipple(
-            Vector2 worldContactPoint,
-            Vector2 worldContactNormal,
-            float collisionSpeed)
+        public void PlayRipple(Vector2 worldContactPoint, Vector2 worldContactNormal, float collisionSpeed)
         {
             if (!EnsureRuntimeState())
                 return;
@@ -309,12 +306,6 @@ namespace JellyMario.Jelly
             PlayRipple(worldContactPoint, Vector2.up, collisionSpeed);
         }
 
-        public Vector2 GetSurfaceVelocityAtWorldPoint(Vector2 worldPoint)
-        {
-            float sampleInterval = Mathf.Max(Time.fixedDeltaTime, 0.0001f);
-            return GetSurfaceDeltaAtWorldPoint(worldPoint) / sampleInterval;
-        }
-
         public Vector2 GetSurfaceDeltaAtWorldPoint(Vector2 worldPoint)
         {
             if (!HasActiveWave())
@@ -323,11 +314,21 @@ namespace JellyMario.Jelly
             Vector3 localPoint3D = surfaceRenderer.transform.InverseTransformPoint(worldPoint);
             Vector2 localPoint = new Vector2(localPoint3D.x, localPoint3D.y);
             float sampleInterval = Mathf.Max(Time.fixedDeltaTime, 0.0001f);
+            float currentTime = Time.time;
 
-            Vector2 currentOffset = EvaluateLocalWaveOffset(localPoint, Time.time);
-            Vector2 previousOffset = EvaluateLocalWaveOffset(
+            VisualWaveSlot contactWave = FindClosestActiveWaveSlot(localPoint, currentTime);
+
+            if (contactWave == null)
+                return Vector2.zero;
+
+            Vector2 currentOffset = EvaluateLocalWaveOffset(
+                contactWave,
                 localPoint,
-                Time.time - sampleInterval);
+                currentTime);
+            Vector2 previousOffset = EvaluateLocalWaveOffset(
+                contactWave,
+                localPoint,
+                currentTime - sampleInterval);
 
             Vector3 worldDelta = surfaceRenderer.transform.TransformVector(
                 currentOffset - previousOffset);
@@ -407,51 +408,78 @@ namespace JellyMario.Jelly
         private Vector2 EvaluateLocalWaveOffset(Vector2 localPoint, float sampleTime)
         {
             Vector2 combinedOffset = Vector2.zero;
-            float falloff = Mathf.Max(impactFalloff, 0.0001f);
+
+            foreach (VisualWaveSlot slot in _visualWaveSlots)
+                combinedOffset += EvaluateLocalWaveOffset(slot, localPoint, sampleTime);
+
+            return Vector2.ClampMagnitude(combinedOffset, maxCombinedVisualOffset);
+        }
+
+        private VisualWaveSlot FindClosestActiveWaveSlot(Vector2 localPoint, float sampleTime)
+        {
+            VisualWaveSlot closestSlot = null;
+            float closestDistanceSquared = float.PositiveInfinity;
 
             foreach (VisualWaveSlot slot in _visualWaveSlots)
             {
-                if (!slot.Active || slot.Strength <= 0.00001f)
+                if (!slot.Active || slot.Strength <= 0.00001f || sampleTime < slot.StartTime)
                     continue;
 
-                if (sampleTime < slot.StartTime)
+                float elapsed = sampleTime - slot.StartTime;
+
+                if (CalculateWaveEnvelope(elapsed) <= 0f)
                     continue;
 
-                float elapsed = Mathf.Max(sampleTime - slot.StartTime, 0f);
-                float waveEnvelope = CalculateWaveEnvelope(elapsed);
+                float distanceSquared = (localPoint - slot.LocalContactPoint).sqrMagnitude;
 
-                if (waveEnvelope <= 0f)
+                if (distanceSquared >= closestDistanceSquared)
                     continue;
 
-                Vector2 impactNormal = slot.LocalNormal.normalized;
-                Vector2 delta = localPoint - slot.LocalContactPoint;
-                Vector2 tangent = new Vector2(-impactNormal.y, impactNormal.x);
-
-                float surfaceDistance = Mathf.Abs(Vector2.Dot(delta, tangent));
-                float depthDistance = Mathf.Abs(Vector2.Dot(delta, impactNormal));
-
-                float spatialFade = Mathf.Exp(
-                    -surfaceDistance * surfaceDistance * falloff * falloff * 0.35f);
-                float depthFade = Mathf.Exp(-depthDistance * (falloff + 1f));
-                float timeFade = Mathf.Exp(
-                    -elapsed * Mathf.Max(impactDecay, 0.0001f));
-
-                float phase = surfaceDistance * impactFrequency - elapsed * impactSpeed;
-                float ripple = -Mathf.Cos(phase) * 0.8f;
-                float dent = -0.3f * Mathf.Exp(
-                    -surfaceDistance * surfaceDistance * Mathf.Max(impactFalloff + 1f, 0.0001f)
-                    - elapsed * Mathf.Max(impactDecay + 2f, 0.0001f));
-
-                float offset =
-                    (ripple * spatialFade * depthFade * timeFade + dent)
-                    * slot.Strength
-                    * visualWaveHeight
-                    * waveEnvelope;
-
-                combinedOffset += impactNormal * offset;
+                closestSlot = slot;
+                closestDistanceSquared = distanceSquared;
             }
 
-            return Vector2.ClampMagnitude(combinedOffset, maxCombinedVisualOffset);
+            return closestSlot;
+        }
+
+        private Vector2 EvaluateLocalWaveOffset(VisualWaveSlot slot, Vector2 localPoint, float sampleTime)
+        {
+            if (!slot.Active || slot.Strength <= 0.00001f || sampleTime < slot.StartTime)
+                return Vector2.zero;
+
+            float elapsed = Mathf.Max(sampleTime - slot.StartTime, 0f);
+            float waveEnvelope = CalculateWaveEnvelope(elapsed);
+
+            if (waveEnvelope <= 0f)
+                return Vector2.zero;
+
+            float falloff = Mathf.Max(impactFalloff, 0.0001f);
+            Vector2 impactNormal = slot.LocalNormal.normalized;
+            Vector2 delta = localPoint - slot.LocalContactPoint;
+            Vector2 tangent = new Vector2(-impactNormal.y, impactNormal.x);
+
+            float surfaceDistance = Mathf.Abs(Vector2.Dot(delta, tangent));
+            float depthDistance = Mathf.Abs(Vector2.Dot(delta, impactNormal));
+
+            float spatialFade = Mathf.Exp(
+                -surfaceDistance * surfaceDistance * falloff * falloff * 0.35f);
+            float depthFade = Mathf.Exp(-depthDistance * (falloff + 1f));
+            float timeFade = Mathf.Exp(
+                -elapsed * Mathf.Max(impactDecay, 0.0001f));
+
+            float phase = surfaceDistance * impactFrequency - elapsed * impactSpeed;
+            float ripple = -Mathf.Cos(phase) * 0.8f;
+            float dent = -0.3f * Mathf.Exp(
+                -surfaceDistance * surfaceDistance * Mathf.Max(impactFalloff + 1f, 0.0001f)
+                - elapsed * Mathf.Max(impactDecay + 2f, 0.0001f));
+
+            float offset =
+                (ripple * spatialFade * depthFade * timeFade + dent)
+                * slot.Strength
+                * visualWaveHeight
+                * waveEnvelope;
+
+            return impactNormal * offset;
         }
 
         private float CalculateWaveEnvelope(float elapsed)

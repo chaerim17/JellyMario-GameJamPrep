@@ -254,9 +254,7 @@ namespace JellyMario.Player
                 ClearGroundWave();
         }
 
-        private void SetGroundWave(
-            JellySurfaceWave surfaceWave,
-            ContactPoint2D contact)
+        private void SetGroundWave(JellySurfaceWave surfaceWave, ContactPoint2D contact)
         {
             _groundWave = surfaceWave;
             _groundNormal = contact.normal.normalized;

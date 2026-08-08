@@ -233,13 +233,6 @@ namespace JellyMario.Jelly
             AddDeformation(-ClampAmount(amount));
         }
 
-        // 캐릭터의 머리-발 축으로 눌린다.
-        public void Squash(float amount)
-        {
-            _localImpactNormal = Vector2.up;
-            AddDeformation(ClampAmount(amount));
-        }
-
         private void AddDeformation(float amount)
         {
             _deformation += amount;
