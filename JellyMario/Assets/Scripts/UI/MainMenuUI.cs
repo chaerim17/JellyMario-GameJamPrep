@@ -1,28 +1,38 @@
 ﻿using UnityEngine;
+using JellyMario.Managers;
 
-namespace JellyMario.UI
+public class MainMenuController : MonoBehaviour
 {
-    public class MainMenuUI : UIBase
+    [Header("UI")]
+    [SerializeField] private GameObject loginPanel;
+    [SerializeField] private GameObject rankingPanel;
+
+    private void Start()
     {
-        // 게임 시작
-        public void OnClickStart()
-        {
-        }
+        loginPanel.SetActive(false);
+        rankingPanel.SetActive(false);
+    }
 
-        // 랭킹 열기
-        public void OnClickRanking()
-        {
-        }
+    // 골인 지점
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player"))
+            return;
 
-        // 닉네임 입력
-        public void SetPlayerName(string playerName)
-        {
-        }
+        loginPanel.SetActive(true);
+    }
 
-        // 닉네임 입력 여부 확인
-        public bool ValidatePlayerName()
-        {
-            return false;
-        }
+    // 랭킹 버튼
+    public void OnClickRankingButton()
+    {
+        rankingPanel.SetActive(true);
+
+        WebManager.Instance.GetRanking();
+    }
+
+    // 랭킹 닫기
+    public void OnClickCloseRanking()
+    {
+        rankingPanel.SetActive(false);
     }
 }
