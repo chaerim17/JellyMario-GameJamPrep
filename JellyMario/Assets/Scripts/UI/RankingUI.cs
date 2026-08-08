@@ -26,8 +26,7 @@ namespace JellyMario.UI
                     
                     nameTexts[i].text = rankings[i].playerName;
                     timeTexts[i].text = $"{rankings[i].clearTime:F2}";
-                    rankTexts[i].text =
-                        $"{rankings[i].playerName}  {rankings[i].clearTime:F2}";
+                    rankTexts[i].text = (i + 1).ToString();
                 }
                 else
                 {
