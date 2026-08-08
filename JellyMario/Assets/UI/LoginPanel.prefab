@@ -833,7 +833,6 @@ GameObject:
   - component: {fileID: 8047045669234980781}
   - component: {fileID: 767158201288300233}
   - component: {fileID: 4881762410311054089}
-  - component: {fileID: 650585017153679127}
   - component: {fileID: 7154323876556702187}
   m_Layer: 5
   m_Name: LoginPanel
@@ -888,7 +887,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.52156866}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.8235294}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -905,37 +904,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &650585017153679127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1492404490116584849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df4957afa593f88439067cc066cca32c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.UI.RankingUI
-  rankTexts: []
-  nameTexts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  timeTexts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &7154323876556702187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3552,8 +3520,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 650585017153679127}
-        m_TargetAssemblyTypeName: JellyMario.UI.RankingUI, Assembly-CSharp
+      - m_Target: {fileID: 7154323876556702187}
+        m_TargetAssemblyTypeName: JellyMario.UI.LoginUI, Assembly-CSharp
         m_MethodName: OnClickClose
         m_Mode: 1
         m_Arguments:

@@ -25,13 +25,9 @@ namespace JellyMario.Managers
         private const string API_KEY =
             "sb_publishable_CeTXneXavNVq9EXdq4N9VQ_qvWSh2B1";
 
-        //TODO: 테스트 후 제거 예정
         protected override void Initialize()
         {
-            Debug.Log("WebManager Initialize");
-            //TestPostConnection();
-            //GetRanking();
-
+            base.Initialize();
         }
 
         // GET 요청을 보내는 공통 함수
@@ -143,14 +139,15 @@ namespace JellyMario.Managers
                     wrappedJson
                 );
 
-            rankingUI.ShowRanking(response.rankings);
+            Debug.Log($"rankingUI = {rankingUI}");
+            Debug.Log($"response = {response}");
 
-            foreach (RankingData ranking in response.rankings)
+            if (response != null)
             {
-                Debug.Log(
-                    $"{ranking.playerName} : {ranking.clearTime}"
-                );
+                Debug.Log($"rankings = {response.rankings}");
             }
+
+            rankingUI.ShowRanking(response.rankings);
         }
 
         public void SubmitProfile(string playerName, int characterId)
