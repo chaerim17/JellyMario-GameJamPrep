@@ -50,6 +50,9 @@ namespace JellyMario.Jelly
         [Tooltip("화면의 파동과 같은 공식으로 Collider 윤곽을 움직입니다.")]
         [SerializeField] private bool animateTileCollider = true;
 
+        [Tooltip("긴 Collider 선분을 나누는 최대 간격. 값이 작을수록 평지의 파동을 더 정확히 따라갑니다.")]
+        [SerializeField, Min(0.05f)] private float maximumColliderPointSpacing = 0.5f;
+
         [SerializeField] private Tilemap surfaceTilemap;
         [SerializeField] private TilemapCollider2D tilemapCollider;
 
@@ -577,27 +580,22 @@ namespace JellyMario.Jelly
 
                 bool alreadyClosed = Vector2.SqrMagnitude(
                     sourcePoints[0] - sourcePoints[pointCount - 1]) < 0.000001f;
-                int runtimePointCount = alreadyClosed ? pointCount : pointCount + 1;
-                Vector2[] closedPoints = new Vector2[runtimePointCount];
-
-                for (int pointIndex = 0; pointIndex < pointCount; pointIndex++)
-                    closedPoints[pointIndex] = sourcePoints[pointIndex];
-
-                if (!alreadyClosed)
-                    closedPoints[runtimePointCount - 1] = sourcePoints[0];
+                Vector2[] runtimePoints = BuildSubdividedColliderPath(
+                    sourcePoints,
+                    alreadyClosed);
 
                 EdgeCollider2D edgeCollider = _runtimeColliderRoot.AddComponent<EdgeCollider2D>();
                 edgeCollider.sharedMaterial = _sourceCompositeCollider.sharedMaterial;
                 edgeCollider.isTrigger = _sourceCompositeCollider.isTrigger;
                 edgeCollider.usedByEffector = _sourceCompositeCollider.usedByEffector;
                 edgeCollider.edgeRadius = _sourceCompositeCollider.edgeRadius;
-                edgeCollider.points = closedPoints;
+                edgeCollider.points = runtimePoints;
 
                 _colliderPaths.Add(new DeformableColliderPath
                 {
                     Collider = edgeCollider,
-                    OriginalPoints = closedPoints,
-                    DeformedPoints = new Vector2[runtimePointCount]
+                    OriginalPoints = runtimePoints,
+                    DeformedPoints = new Vector2[runtimePoints.Length]
                 });
             }
 
@@ -611,6 +609,43 @@ namespace JellyMario.Jelly
             _sourceCompositeCollider.enabled = false;
 
             return true;
+        }
+
+        private Vector2[] BuildSubdividedColliderPath(
+            Vector2[] sourcePoints,
+            bool alreadyClosed)
+        {
+            int uniquePointCount = alreadyClosed
+                ? sourcePoints.Length - 1
+                : sourcePoints.Length;
+
+            if (uniquePointCount < 2)
+                return sourcePoints;
+
+            float maximumSpacing = maximumColliderPointSpacing > 0.0001f
+                ? Mathf.Max(maximumColliderPointSpacing, 0.05f)
+                : 0.5f;
+            List<Vector2> subdividedPoints = new List<Vector2>();
+
+            for (int pointIndex = 0; pointIndex < uniquePointCount; pointIndex++)
+            {
+                Vector2 start = sourcePoints[pointIndex];
+                Vector2 end = sourcePoints[(pointIndex + 1) % uniquePointCount];
+                int segmentCount = Mathf.Max(
+                    1,
+                    Mathf.CeilToInt(Vector2.Distance(start, end) / maximumSpacing));
+
+                if (pointIndex == 0)
+                    subdividedPoints.Add(start);
+
+                for (int segmentIndex = 1; segmentIndex <= segmentCount; segmentIndex++)
+                {
+                    float progress = segmentIndex / (float)segmentCount;
+                    subdividedPoints.Add(Vector2.Lerp(start, end, progress));
+                }
+            }
+
+            return subdividedPoints.ToArray();
         }
 
         private void UpdateRuntimeWaveCollider()
