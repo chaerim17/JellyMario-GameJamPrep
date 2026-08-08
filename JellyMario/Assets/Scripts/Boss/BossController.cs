@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using JellyMario.Core;
+using JellyMario.UI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using JellyMario.UI;
+using UnityEngine.SceneManagement;
 
 public class BossController : BossBase
 {
@@ -102,7 +104,16 @@ public class BossController : BossBase
 
         yield return StartPattern(3, GetPattern4Duration(), Pattern4_SpawnTrap());
 
+        // TODO: 타이머 DB에 저장
+        //TimerManager.Instance.StopTimer();
+        //float clearTime = TimerManager.Instance.GetClearTime();
+        //yield return ManagersHub.Web.SubmitScore(clearTime);
+
+        // 보스 처치 후 처리
         Die();
+
+        // 타이틀 화면으로 이동
+        SceneManager.LoadScene("Init");
     }
 
     // 패턴1 : 플레이어 시작 위치로 이동
@@ -282,6 +293,8 @@ public class BossController : BossBase
                     breathSpawnPoint.position,
                     Quaternion.Euler(0f, 0f, rotation));
 
+            ManagersHub.Sound.PlayBossFireballSFX();
+
             FireballController controller =
                 fireball.GetComponent<FireballController>();
 
@@ -345,6 +358,8 @@ public class BossController : BossBase
                  missilePrefab,
                  missileSpawnPoint.position,
                  Quaternion.identity);
+
+            ManagersHub.Sound.PlayBossMissileSFX();
 
             missiles.Add(missile);
 

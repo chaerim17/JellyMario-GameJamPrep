@@ -484,6 +484,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4f26a396c2ff245aee82bc807121bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.SoundManager
+  _mainBGM: {fileID: 8300000, guid: d7a169d626574d84287f694233ddf6d2, type: 3}
+  _jumpSFX: {fileID: 8300000, guid: 53af80e92edca33489c61bde0afa096c, type: 3}
+  _deathSFX: {fileID: 8300000, guid: 984f378089f2e7c4fa38bc3f31ce3782, type: 3}
+  _bossFireballSFX: {fileID: 8300000, guid: 22ad4e991b7a52b4f8d2bf3befdd53c9, type: 3}
+  _bossMissileSFX: {fileID: 8300000, guid: c32a8595645c0274b8d5c5ac40313061, type: 3}
 --- !u!114 &1702438477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -496,6 +501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df3284c70bf814649b711b387cc92f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.WebManager
+  rankingUI: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
