@@ -484,6 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4f26a396c2ff245aee82bc807121bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.SoundManager
+  _mainBGM: {fileID: 8300000, guid: d7a169d626574d84287f694233ddf6d2, type: 3}
 --- !u!114 &1702438477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -496,6 +497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df3284c70bf814649b711b387cc92f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.WebManager
+  rankingUI: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
