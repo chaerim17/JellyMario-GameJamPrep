@@ -1,25 +1,25 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace JellyMario.CameraSystem
 {
-    // °°Àº °ÔÀÓ ¿ÀºêÁ§Æ®¿¡ ¿©·¯ °³ÀÇ FollowCamera ÄÄÆ÷³ÍÆ®°¡ ºÙ´Â °ÍÀ» ¹æÁö
+    // ê°™ì€ ê²Œìž„ ì˜¤ë¸Œì íŠ¸ì— ì—¬ëŸ¬ ê°œì˜ FollowCamera ì»´í¬ë„ŒíŠ¸ê°€ ë¶™ëŠ” ê²ƒì„ ë°©ì§€
     [DisallowMultipleComponent]
     public class FollowCamera : MonoBehaviour
     {
-        [Header("ÃßÀû ¼³Á¤")]
+        [Header("ì¶”ì  ì„¤ì •")]
         [SerializeField] private Transform target;
         [SerializeField] private float followSpeed = 8f;
 
-        [Header("È­¸é ¿©¹é ¼³Á¤")]
+        [Header("í™”ë©´ ì—¬ë°± ì„¤ì •")]
         [SerializeField, Min(0f)] private float horizontalMargin = 1f;
         [SerializeField, Min(0f)] private float verticalMargin = 2f;
 
-        // ÃÊ±âÈ­
+        // ì´ˆê¸°í™”
         private void Awake()
         {
             if (target == null)
             {
-                Debug.LogWarning("Ä«¸Þ¶ó°¡ µû¶ó°¥ ´ë»óÀÌ µî·ÏµÇÁö ¾Ê¾Ò½À´Ï´Ù.", this);
+                Debug.LogWarning("ì¹´ë©”ë¼ê°€ ë”°ë¼ê°ˆ ëŒ€ìƒì´ ë“±ë¡ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.", this);
                 
                 enabled = false;
                 return;
@@ -28,14 +28,14 @@ namespace JellyMario.CameraSystem
 
         private void LateUpdate()
         {
-            // ÇÃ·¹ÀÌ¾î¿Í Ä«¸Þ¶ó Áß½É »çÀÌÀÇ °Å¸®
+            // í”Œë ˆì´ì–´ì™€ ì¹´ë©”ë¼ ì¤‘ì‹¬ ì‚¬ì´ì˜ ê±°ë¦¬
             float distanceX = target.position.x - transform.position.x;
             float distanceY = target.position.y - transform.position.y;
 
             float targetX = transform.position.x;
             float targetY = transform.position.y;
 
-            // ÇÃ·¹ÀÌ¾î°¡ ¿©¹éÀ» ³Ñ¾î°£ °æ¿ì
+            // í”Œë ˆì´ì–´ê°€ ì—¬ë°±ì„ ë„˜ì–´ê°„ ê²½ìš°
             if (distanceX > horizontalMargin)
                 targetX = target.position.x - horizontalMargin;
             else if (distanceX < -horizontalMargin)
@@ -50,7 +50,7 @@ namespace JellyMario.CameraSystem
             float newX = Mathf.Lerp(transform.position.x, targetX, followRatio);
             float newY = Mathf.Lerp(transform.position.y, targetY, followRatio);
 
-            // XÃà°ú YÃà¸¸ º¯°æÇÏ°í ZÃàÀº À¯Áö
+            // Xì¶•ê³¼ Yì¶•ë§Œ ë³€ê²½í•˜ê³  Zì¶•ì€ ìœ ì§€
             transform.position = new Vector3(newX, newY, transform.position.z);
         }
     }

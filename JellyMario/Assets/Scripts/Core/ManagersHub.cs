@@ -15,17 +15,11 @@ namespace JellyMario.Core
         // WebManager 접근
         public static WebManager Web => WebManager.Instance;
 
-        // ResourceManager 접근
-        public static ResourceManager Resource => ResourceManager.Instance;
-
         // PlayerManager 접근
         public static PlayerManager Player => PlayerManager.Instance;
 
         // InputManager 접근
         public static InputManager Input => InputManager.Instance;
-
-        // UIManager 접근
-        public static UIManager UI => UIManager.Instance;
 
         // SoundManager 접근
         public static SoundManager Sound => SoundManager.Instance;
