@@ -14,6 +14,11 @@ public class TimerManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        StartTimer();
+    }
+
     private void Update()
     {
         if (isRunning)
