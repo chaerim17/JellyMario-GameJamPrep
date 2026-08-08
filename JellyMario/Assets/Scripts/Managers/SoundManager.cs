@@ -17,6 +17,10 @@ namespace JellyMario.Managers
         
         private AudioSource _sfxSource;
 
+        // 보스 패턴 관련 효과음
+        [SerializeField] private AudioClip _bossFireballSFX;
+        [SerializeField] private AudioClip _bossMissileSFX;
+
         // SoundManager 초기화
         protected override void Initialize()
         {
@@ -64,6 +68,18 @@ namespace JellyMario.Managers
         public virtual void StopBGM()
         {
             _bgmSource.Stop();
+        }
+
+        // 보스 파이볼 효과음 재생
+        public void PlayBossFireballSFX()
+        {
+            _sfxSource.PlayOneShot(_bossFireballSFX);
+        }
+
+        // 보스 미사일 효과음 재생
+        public void PlayBossMissileSFX()
+        {
+            _sfxSource.PlayOneShot(_bossMissileSFX);
         }
 
         // 모든 사운드 정지

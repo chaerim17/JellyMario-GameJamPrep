@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using JellyMario.Core;
+using JellyMario.UI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using JellyMario.UI;
 
 public class BossController : BossBase
 {
@@ -282,6 +283,8 @@ public class BossController : BossBase
                     breathSpawnPoint.position,
                     Quaternion.Euler(0f, 0f, rotation));
 
+            ManagersHub.Sound.PlayBossFireballSFX();
+
             FireballController controller =
                 fireball.GetComponent<FireballController>();
 
@@ -345,6 +348,8 @@ public class BossController : BossBase
                  missilePrefab,
                  missileSpawnPoint.position,
                  Quaternion.identity);
+
+            ManagersHub.Sound.PlayBossMissileSFX();
 
             missiles.Add(missile);
 
