@@ -26,6 +26,7 @@ Shader "JellyMario/2D/JellyGround"
         _ImpactDecay("Impact Decay", Float) = 0.7
         _WaveHeightMultiplier("Wave Height Multiplier", Float) = 2.5
         _MaxCombinedWaveOffset("Max Combined Wave Offset", Float) = 1.25
+        [HideInInspector] _WaveDuration("Wave Duration", Float) = 3.0
     }
 
     SubShader
@@ -87,6 +88,7 @@ Shader "JellyMario/2D/JellyGround"
                 float _ImpactDecay;
                 float _WaveHeightMultiplier;
                 float _MaxCombinedWaveOffset;
+                float _WaveDuration;
             CBUFFER_END
 
             float2 CalculateWaveOffset(
@@ -105,6 +107,26 @@ Shader "JellyMario/2D/JellyGround"
                     max(dot(impactNormal, impactNormal), 0.000001));
 
                 float elapsed = max(_Time.y - impactData.z, 0.0);
+                float duration = max(_WaveDuration, 0.01);
+
+                if (elapsed >= duration)
+                    return float2(0.0, 0.0);
+
+                float attackDuration = max(min(duration * 0.1, 0.1), 0.0001);
+                float attackProgress = saturate(elapsed / attackDuration);
+                float attackFade =
+                    attackProgress * attackProgress
+                    * (3.0 - 2.0 * attackProgress);
+
+                float fadeStart = duration * 0.75;
+                float fadeProgress = saturate(
+                    (elapsed - fadeStart)
+                    / max(duration - fadeStart, 0.0001));
+                float smoothProgress =
+                    fadeProgress * fadeProgress
+                    * (3.0 - 2.0 * fadeProgress);
+                float waveEnvelope = attackFade * (1.0 - smoothProgress);
+
                 float2 delta = vertexPosition - impactData.xy;
                 float2 tangent = float2(-impactNormal.y, impactNormal.x);
 
@@ -136,7 +158,8 @@ Shader "JellyMario/2D/JellyGround"
                 float offset =
                     (ripple * spatialFade * depthFade * timeFade + dent)
                     * strength
-                    * _WaveHeightMultiplier;
+                    * _WaveHeightMultiplier
+                    * waveEnvelope;
 
                 return impactNormal * offset;
             }

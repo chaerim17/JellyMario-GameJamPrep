@@ -24,7 +24,7 @@ namespace JellyMario.Jelly
         [Tooltip("같은 물체의 중복 충돌을 무시하는 시간")]
         [SerializeField, Min(0f)] private float impactCooldown = 0.4f;
 
-        [Tooltip("하나의 파동이 유지되는 시간")]
+        [Tooltip("하나의 파동이 유지되는 시간. 마지막 25% 구간에서 자연스럽게 사라집니다.")]
         [SerializeField, Min(0.01f)] private float visualWaveDuration = 3f;
 
         [Tooltip("동시에 유지할 충돌 파동 개수")]
@@ -34,43 +34,44 @@ namespace JellyMario.Jelly
         [Tooltip("같은 충돌의 접촉점을 서로 다른 지점으로 판단하는 최소 거리")]
         [SerializeField, Min(0f)] private float minimumContactSeparation = 0.75f;
 
-        [Header("비주얼 파동 설정")]
+        [Header("공통 파동 설정")]
         [SerializeField, Min(0f)] private float impactFrequency = 1.2f;
         [SerializeField, Min(0f)] private float impactSpeed = 1.5f;
         [SerializeField, Min(0f)] private float impactFalloff = 0.25f;
         [SerializeField, Min(0f)] private float impactDecay = 0.6f;
 
-        [Tooltip("Shader에서 보여주는 파동 높이 배율")]
+        [Tooltip("화면과 Collider에 함께 적용되는 파동 높이 배율")]
         [SerializeField, Min(0f)] private float visualWaveHeight = 1.6f;
 
-        [Tooltip("여러 비주얼 파동이 합쳐졌을 때의 최대 이동 거리")]
+        [Tooltip("여러 파동이 합쳐졌을 때 화면과 Collider의 최대 이동 거리")]
         [SerializeField, Min(0f)] private float maxCombinedVisualOffset = 1.25f;
 
-        [Header("타일 Collider 파동")]
-        [Tooltip("Tilemap 타일과 Collider를 파동처럼 함께 움직입니다.")]
+        [Header("파동 Collider")]
+        [Tooltip("화면의 파동과 같은 공식으로 Collider 윤곽을 움직입니다.")]
         [SerializeField] private bool animateTileCollider = true;
 
         [SerializeField] private Tilemap surfaceTilemap;
         [SerializeField] private TilemapCollider2D tilemapCollider;
-
-        [SerializeField, Min(0f)] private float colliderWaveRadius = 6f;
-        [SerializeField, Min(0f)] private float colliderWaveHeight = 0.12f;
-        [SerializeField, Min(0.01f)] private float colliderWaveTravelSpeed = 2.5f;
-        [SerializeField, Min(0f)] private float colliderWaveFrequency = 2.8f;
-        [SerializeField, Min(0f)] private float colliderWaveDecay = 1f;
-        [SerializeField, Min(0f)] private float colliderDistanceFalloff = 0.18f;
-
-        [Tooltip("여러 Collider 파동이 합쳐졌을 때의 최대 이동 거리")]
-        [SerializeField, Min(0f)] private float maxCombinedColliderOffset = 0.35f;
 
         private MaterialPropertyBlock _propertyBlock;
 
         private readonly VisualWaveSlot[] _visualWaveSlots =
             new VisualWaveSlot[ShaderWaveSlotCount];
 
-        private readonly List<ColliderWave> _colliderWaves = new();
-        private readonly Dictionary<Vector3Int, TileWaveCell> _waveCells = new();
         private readonly List<ImpactCooldownRecord> _impactCooldownRecords = new();
+        private readonly List<DeformableColliderPath> _colliderPaths = new();
+
+        private CompositeCollider2D _sourceCompositeCollider;
+        private Rigidbody2D _sourceRigidbody;
+        private GameObject _runtimeColliderRoot;
+        private bool _runtimeColliderDeformed;
+        private bool _createdCompositeCollider;
+        private bool _createdRigidbody;
+        private bool _originalTilemapColliderEnabled;
+        private bool _originalCompositeColliderEnabled;
+        private Collider2D.CompositeOperation _originalCompositeOperation;
+        private CompositeCollider2D.GeometryType _originalGeometryType;
+        private CompositeCollider2D.GenerationType _originalGenerationType;
 
         private static readonly int[] ImpactDataIds =
         {
@@ -94,19 +95,16 @@ namespace JellyMario.Jelly
         private static readonly int ImpactDecayId = Shader.PropertyToID("_ImpactDecay");
         private static readonly int WaveHeightId = Shader.PropertyToID("_WaveHeightMultiplier");
         private static readonly int MaxCombinedWaveId = Shader.PropertyToID("_MaxCombinedWaveOffset");
+        private static readonly int WaveDurationId = Shader.PropertyToID("_WaveDuration");
 
         private sealed class VisualWaveSlot
         {
             public bool Active;
-            public float EndTime;
-        }
-
-        private sealed class ColliderWave
-        {
             public Vector2 LocalContactPoint;
-            public Vector2 LocalNormal;
+            public Vector2 LocalNormal = Vector2.up;
             public float StartTime;
             public float EndTime;
+            public float Strength;
         }
 
         private sealed class ImpactCooldownRecord
@@ -116,11 +114,11 @@ namespace JellyMario.Jelly
             public float EndTime;
         }
 
-        private sealed class TileWaveCell
+        private sealed class DeformableColliderPath
         {
-            public Matrix4x4 OriginalTransform;
-            public TileFlags OriginalFlags;
-            public Vector2 LocalCenter;
+            public EdgeCollider2D Collider;
+            public Vector2[] OriginalPoints;
+            public Vector2[] DeformedPoints;
         }
 
         private void Awake()
@@ -128,20 +126,21 @@ namespace JellyMario.Jelly
             if (!EnsureRuntimeState())
             {
                 Debug.LogError("출렁이게 할 Surface Renderer가 등록되지 않았습니다.", this);
-
                 enabled = false;
                 return;
             }
 
-            if (animateTileCollider && (surfaceTilemap == null || tilemapCollider == null))
-            {
-                Debug.LogWarning("Tilemap과 TilemapCollider2D가 없어 비주얼 파동만 사용합니다.", this);
-
-                animateTileCollider = false;
-            }
-
             ApplyWaveSettings();
             ClearAllVisualWaves();
+
+            if (animateTileCollider && !InitializeRuntimeWaveCollider())
+            {
+                Debug.LogWarning(
+                    "파동 Collider를 만들 수 없어 비주얼 파동만 사용합니다. " +
+                    "TilemapCollider2D와 Rigidbody2D 설정을 확인해 주세요.",
+                    this);
+                animateTileCollider = false;
+            }
         }
 
         private void OnEnable()
@@ -166,14 +165,10 @@ namespace JellyMario.Jelly
             if (surfaceRenderer == null)
                 return false;
 
-            if (_propertyBlock == null)
-                _propertyBlock = new MaterialPropertyBlock();
+            _propertyBlock ??= new MaterialPropertyBlock();
 
             for (int index = 0; index < ShaderWaveSlotCount; index++)
-            {
-                if (_visualWaveSlots[index] == null)
-                    _visualWaveSlots[index] = new VisualWaveSlot();
-            }
+                _visualWaveSlots[index] ??= new VisualWaveSlot();
 
             return true;
         }
@@ -184,16 +179,15 @@ namespace JellyMario.Jelly
                 return;
 
             UpdateVisualWaves();
-            UpdateTileColliderWaves();
+            UpdateRuntimeWaveCollider();
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (!CanReact(collision.gameObject.layer) || collision.contactCount == 0)
                 return;
-            
-            int collisionWaveLimit = Mathf.Clamp(concurrentWaveLimit, 1, ShaderWaveSlotCount);
 
+            int collisionWaveLimit = Mathf.Clamp(concurrentWaveLimit, 1, ShaderWaveSlotCount);
             Vector2[] acceptedPoints = new Vector2[ShaderWaveSlotCount];
             int acceptedCount = 0;
 
@@ -214,7 +208,6 @@ namespace JellyMario.Jelly
                     if (Vector2.Distance(acceptedPoints[index], contact.point) < minimumContactSeparation)
                     {
                         overlapsAcceptedPoint = true;
-
                         break;
                     }
                 }
@@ -231,7 +224,6 @@ namespace JellyMario.Jelly
                 if (acceptedCount >= collisionWaveLimit)
                     break;
             }
-
         }
 
         private bool IsImpactCoolingDown(GameObject sourceObject, Vector2 worldPoint)
@@ -245,11 +237,11 @@ namespace JellyMario.Jelly
                 if (Time.time >= record.EndTime || record.SourceObject == null)
                 {
                     _impactCooldownRecords.RemoveAt(index);
-
                     continue;
                 }
 
-                if (record.SourceObject == sourceObject && Vector2.Distance(record.WorldPoint, worldPoint) < separation)
+                if (record.SourceObject == sourceObject &&
+                    Vector2.Distance(record.WorldPoint, worldPoint) < separation)
                     return true;
             }
 
@@ -262,9 +254,11 @@ namespace JellyMario.Jelly
                 return;
 
             _impactCooldownRecords.Add(new ImpactCooldownRecord
-                {
-                    SourceObject = sourceObject, WorldPoint = worldPoint, EndTime = Time.time + impactCooldown
-                });
+            {
+                SourceObject = sourceObject,
+                WorldPoint = worldPoint,
+                EndTime = Time.time + impactCooldown
+            });
         }
 
         public void PlayRipple(Vector2 worldContactPoint, Vector2 worldContactNormal, float collisionSpeed)
@@ -272,7 +266,10 @@ namespace JellyMario.Jelly
             if (!EnsureRuntimeState())
                 return;
 
-            float strength = Mathf.Clamp(Mathf.Abs(collisionSpeed) * impactResponse, 0f, maxImpactStrength);
+            float strength = Mathf.Clamp(
+                Mathf.Abs(collisionSpeed) * impactResponse,
+                0f,
+                maxImpactStrength);
 
             if (strength <= 0f)
                 return;
@@ -286,17 +283,22 @@ namespace JellyMario.Jelly
 
             int slotIndex = FindVisualWaveSlot();
             VisualWaveSlot slot = _visualWaveSlots[slotIndex];
+
             slot.Active = true;
+            slot.LocalContactPoint = new Vector2(localPoint3D.x, localPoint3D.y);
+            slot.LocalNormal = localNormal;
+            slot.StartTime = Time.time;
             slot.EndTime = Time.time + visualWaveDuration;
+            slot.Strength = strength;
 
             surfaceRenderer.GetPropertyBlock(_propertyBlock);
-
-            _propertyBlock.SetVector(ImpactDataIds[slotIndex], new Vector4(localPoint3D.x, localPoint3D.y, Time.time, strength));
-            _propertyBlock.SetVector(ImpactNormalIds[slotIndex], new Vector4(localNormal.x, localNormal.y, 0f, 0f));
-
+            _propertyBlock.SetVector(
+                ImpactDataIds[slotIndex],
+                new Vector4(localPoint3D.x, localPoint3D.y, slot.StartTime, strength));
+            _propertyBlock.SetVector(
+                ImpactNormalIds[slotIndex],
+                new Vector4(localNormal.x, localNormal.y, 0f, 0f));
             surfaceRenderer.SetPropertyBlock(_propertyBlock);
-
-            StartTileColliderWave(worldContactPoint, worldContactNormal);
         }
 
         public void PlayRipple(Vector2 worldContactPoint, float collisionSpeed)
@@ -304,10 +306,39 @@ namespace JellyMario.Jelly
             PlayRipple(worldContactPoint, Vector2.up, collisionSpeed);
         }
 
+        public Vector2 GetSurfaceDeltaAtWorldPoint(Vector2 worldPoint)
+        {
+            if (!HasActiveWave())
+                return Vector2.zero;
+
+            Vector3 localPoint3D = surfaceRenderer.transform.InverseTransformPoint(worldPoint);
+            Vector2 localPoint = new Vector2(localPoint3D.x, localPoint3D.y);
+            float sampleInterval = Mathf.Max(Time.fixedDeltaTime, 0.0001f);
+            float currentTime = Time.time;
+
+            VisualWaveSlot contactWave = FindClosestActiveWaveSlot(localPoint, currentTime);
+
+            if (contactWave == null)
+                return Vector2.zero;
+
+            Vector2 currentOffset = EvaluateLocalWaveOffset(
+                contactWave,
+                localPoint,
+                currentTime);
+            Vector2 previousOffset = EvaluateLocalWaveOffset(
+                contactWave,
+                localPoint,
+                currentTime - sampleInterval);
+
+            Vector3 worldDelta = surfaceRenderer.transform.TransformVector(
+                currentOffset - previousOffset);
+
+            return new Vector2(worldDelta.x, worldDelta.y);
+        }
+
         private int FindVisualWaveSlot()
         {
             int limit = Mathf.Clamp(concurrentWaveLimit, 1, ShaderWaveSlotCount);
-
             int oldestSlot = 0;
             float oldestEndTime = float.PositiveInfinity;
 
@@ -331,7 +362,6 @@ namespace JellyMario.Jelly
         private void UpdateVisualWaves()
         {
             bool propertyChanged = false;
-
             surfaceRenderer.GetPropertyBlock(_propertyBlock);
 
             for (int index = 0; index < ShaderWaveSlotCount; index++)
@@ -342,6 +372,7 @@ namespace JellyMario.Jelly
                     continue;
 
                 slot.Active = false;
+                slot.Strength = 0f;
                 ClearVisualWaveSlot(index);
                 propertyChanged = true;
             }
@@ -352,8 +383,12 @@ namespace JellyMario.Jelly
 
         private void ClearVisualWaveSlot(int index)
         {
-            _propertyBlock.SetVector(ImpactDataIds[index], new Vector4(0f, 0f, -1000f, 0f));
-            _propertyBlock.SetVector(ImpactNormalIds[index], new Vector4(0f, 1f, 0f, 0f));
+            _propertyBlock.SetVector(
+                ImpactDataIds[index],
+                new Vector4(0f, 0f, -1000f, 0f));
+            _propertyBlock.SetVector(
+                ImpactNormalIds[index],
+                new Vector4(0f, 1f, 0f, 0f));
         }
 
         private void ClearAllVisualWaves()
@@ -363,162 +398,300 @@ namespace JellyMario.Jelly
             for (int index = 0; index < ShaderWaveSlotCount; index++)
             {
                 _visualWaveSlots[index].Active = false;
+                _visualWaveSlots[index].Strength = 0f;
                 ClearVisualWaveSlot(index);
             }
 
             surfaceRenderer.SetPropertyBlock(_propertyBlock);
         }
 
-        private void StartTileColliderWave(Vector2 worldContactPoint, Vector2 worldContactNormal)
+        private Vector2 EvaluateLocalWaveOffset(Vector2 localPoint, float sampleTime)
         {
-            if (!animateTileCollider || surfaceTilemap == null)
-                return;
+            Vector2 combinedOffset = Vector2.zero;
 
-            Vector3 localPoint3D = surfaceTilemap.transform.InverseTransformPoint(worldContactPoint);
-            Vector3 localNormal3D = surfaceTilemap.transform.InverseTransformDirection(worldContactNormal);
-            Vector2 localNormal = new Vector2(localNormal3D.x, localNormal3D.y).normalized;
+            foreach (VisualWaveSlot slot in _visualWaveSlots)
+                combinedOffset += EvaluateLocalWaveOffset(slot, localPoint, sampleTime);
 
-            if (localNormal.sqrMagnitude < 0.001f)
-                localNormal = Vector2.up;
-
-            float travelDuration = colliderWaveRadius / Mathf.Max(colliderWaveTravelSpeed, 0.01f);
-            float decayDuration = colliderWaveDecay > 0f
-                ? 5f / colliderWaveDecay
-                : 3f;
-            int colliderWaveLimit = Mathf.Clamp(concurrentWaveLimit, 1, ShaderWaveSlotCount);
-
-            if (_colliderWaves.Count >= colliderWaveLimit)
-                _colliderWaves.RemoveAt(0);
-
-            _colliderWaves.Add(new ColliderWave
-            {
-                LocalContactPoint = new Vector2(localPoint3D.x, localPoint3D.y),
-                LocalNormal = localNormal,
-                StartTime = Time.time,
-                EndTime = Time.time + travelDuration + decayDuration
-            });
-
-            RegisterWaveCells(localPoint3D);
+            return Vector2.ClampMagnitude(combinedOffset, maxCombinedVisualOffset);
         }
 
-        private void RegisterWaveCells(Vector3 localContactPoint)
+        private VisualWaveSlot FindClosestActiveWaveSlot(Vector2 localPoint, float sampleTime)
         {
-            Vector3 cellSize = surfaceTilemap.layoutGrid.cellSize;
-            float smallestCellSize = Mathf.Max(0.001f, Mathf.Min(Mathf.Abs(cellSize.x), Mathf.Abs(cellSize.y)));
+            VisualWaveSlot closestSlot = null;
+            float closestDistanceSquared = float.PositiveInfinity;
 
-            int cellRadius = Mathf.CeilToInt(colliderWaveRadius / smallestCellSize);
-
-            Vector3Int centerCell = surfaceTilemap.LocalToCell(localContactPoint);
-
-            for (int y = -cellRadius; y <= cellRadius; y++)
+            foreach (VisualWaveSlot slot in _visualWaveSlots)
             {
-                for (int x = -cellRadius; x <= cellRadius; x++)
-                {
-                    Vector3Int cell = centerCell + new Vector3Int(x, y, 0);
-                    if (!surfaceTilemap.HasTile(cell) || _waveCells.ContainsKey(cell))
-                        continue;
+                if (!slot.Active || slot.Strength <= 0.00001f || sampleTime < slot.StartTime)
+                    continue;
 
-                    Vector3 cellCenter = surfaceTilemap.GetCellCenterLocal(cell);
-                    if (Vector2.Distance(cellCenter, localContactPoint) > colliderWaveRadius)
-                        continue;
+                float elapsed = sampleTime - slot.StartTime;
 
-                    TileFlags originalFlags = surfaceTilemap.GetTileFlags(cell);
+                if (CalculateWaveEnvelope(elapsed) <= 0f)
+                    continue;
 
-                    _waveCells[cell] = new TileWaveCell
-                    {
-                        OriginalTransform = surfaceTilemap.GetTransformMatrix(cell),
-                        OriginalFlags = originalFlags,
-                        LocalCenter = new Vector2(cellCenter.x, cellCenter.y)
-                    };
+                float distanceSquared = (localPoint - slot.LocalContactPoint).sqrMagnitude;
 
-                    surfaceTilemap.SetTileFlags(cell, originalFlags & ~TileFlags.LockTransform);
-                }
+                if (distanceSquared >= closestDistanceSquared)
+                    continue;
+
+                closestSlot = slot;
+                closestDistanceSquared = distanceSquared;
             }
+
+            return closestSlot;
         }
 
-        private void UpdateTileColliderWaves()
+        private Vector2 EvaluateLocalWaveOffset(VisualWaveSlot slot, Vector2 localPoint, float sampleTime)
         {
-            if (_colliderWaves.Count == 0 || surfaceTilemap == null)
-                return;
+            if (!slot.Active || slot.Strength <= 0.00001f || sampleTime < slot.StartTime)
+                return Vector2.zero;
 
-            for (int index = _colliderWaves.Count - 1; index >= 0; index--)
-            {
-                if (Time.time >= _colliderWaves[index].EndTime)
-                    _colliderWaves.RemoveAt(index);
-            }
+            float elapsed = Mathf.Max(sampleTime - slot.StartTime, 0f);
+            float waveEnvelope = CalculateWaveEnvelope(elapsed);
 
-            if (_colliderWaves.Count == 0)
-            {
-                ResetTileColliderWaves();
+            if (waveEnvelope <= 0f)
+                return Vector2.zero;
 
-                return;
-            }
+            float falloff = Mathf.Max(impactFalloff, 0.0001f);
+            Vector2 impactNormal = slot.LocalNormal.normalized;
+            Vector2 delta = localPoint - slot.LocalContactPoint;
+            Vector2 tangent = new Vector2(-impactNormal.y, impactNormal.x);
 
-            foreach (KeyValuePair<Vector3Int, TileWaveCell> pair in _waveCells)
-            {
-                Vector2 combinedOffset = Vector2.zero;
-                TileWaveCell cell = pair.Value;
+            float surfaceDistance = Mathf.Abs(Vector2.Dot(delta, tangent));
+            float depthDistance = Mathf.Abs(Vector2.Dot(delta, impactNormal));
 
-                foreach (ColliderWave wave in _colliderWaves)
-                {
-                    float distance = Vector2.Distance(cell.LocalCenter, wave.LocalContactPoint);
-                    if (distance > colliderWaveRadius)
-                        continue;
+            float spatialFade = Mathf.Exp(
+                -surfaceDistance * surfaceDistance * falloff * falloff * 0.35f);
+            float depthFade = Mathf.Exp(-depthDistance * (falloff + 1f));
+            float timeFade = Mathf.Exp(
+                -elapsed * Mathf.Max(impactDecay, 0.0001f));
 
-                    float delayedTime = Time.time - wave.StartTime - distance / Mathf.Max(colliderWaveTravelSpeed, 0.01f);
-                    if (delayedTime < 0f)
-                        continue;
+            float phase = surfaceDistance * impactFrequency - elapsed * impactSpeed;
+            float ripple = -Mathf.Cos(phase) * 0.8f;
+            float dent = -0.3f * Mathf.Exp(
+                -surfaceDistance * surfaceDistance * Mathf.Max(impactFalloff + 1f, 0.0001f)
+                - elapsed * Mathf.Max(impactDecay + 2f, 0.0001f));
 
-                    float timeEnvelope = Mathf.Exp(-delayedTime * colliderWaveDecay);
-                    float distanceEnvelope = Mathf.Exp(-distance * colliderDistanceFalloff);
-                    float waveOffset = Mathf.Sin(delayedTime * colliderWaveFrequency) * colliderWaveHeight * timeEnvelope * distanceEnvelope;
+            float offset =
+                (ripple * spatialFade * depthFade * timeFade + dent)
+                * slot.Strength
+                * visualWaveHeight
+                * waveEnvelope;
 
-                    combinedOffset += wave.LocalNormal * waveOffset;
-                }
-
-                combinedOffset = Vector2.ClampMagnitude(combinedOffset, maxCombinedColliderOffset);
-
-                Matrix4x4 waveTransform = Matrix4x4.Translate(combinedOffset) * cell.OriginalTransform;
-
-                surfaceTilemap.SetTransformMatrix(pair.Key, waveTransform);
-            }
-
-            ProcessTilemapColliderChanges();
+            return impactNormal * offset;
         }
 
-        private void ResetTileColliderWaves()
+        private float CalculateWaveEnvelope(float elapsed)
         {
-            if (surfaceTilemap == null || _waveCells.Count == 0)
-                return;
+            float duration = Mathf.Max(visualWaveDuration, 0.01f);
 
-            foreach (KeyValuePair<Vector3Int, TileWaveCell> pair in _waveCells)
-            {
-                surfaceTilemap.SetTransformMatrix(pair.Key, pair.Value.OriginalTransform);
-                surfaceTilemap.SetTileFlags(pair.Key, pair.Value.OriginalFlags);
-            }
+            if (elapsed >= duration)
+                return 0f;
 
-            _waveCells.Clear();
-            _colliderWaves.Clear();
-            ProcessTilemapColliderChanges();
+            float attackDuration = Mathf.Max(Mathf.Min(duration * 0.1f, 0.1f), 0.0001f);
+            float attackProgress = Mathf.Clamp01(elapsed / attackDuration);
+            float attackFade = attackProgress * attackProgress * (3f - 2f * attackProgress);
+
+            float fadeStart = duration * 0.75f;
+            float fadeProgress = Mathf.Clamp01(
+                (elapsed - fadeStart) / Mathf.Max(duration - fadeStart, 0.0001f));
+            float smoothProgress = fadeProgress * fadeProgress * (3f - 2f * fadeProgress);
+
+            return attackFade * (1f - smoothProgress);
         }
 
-        private void ProcessTilemapColliderChanges()
+        private bool HasActiveWave()
         {
-            if (tilemapCollider != null && tilemapCollider.hasTilemapChanges)
+            foreach (VisualWaveSlot slot in _visualWaveSlots)
+            {
+                if (slot.Active)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool InitializeRuntimeWaveCollider()
+        {
+            if (surfaceTilemap == null || tilemapCollider == null)
+                return false;
+
+            _originalTilemapColliderEnabled = tilemapCollider.enabled;
+            _originalCompositeOperation = tilemapCollider.compositeOperation;
+            _sourceRigidbody = GetComponent<Rigidbody2D>();
+            _sourceCompositeCollider = GetComponent<CompositeCollider2D>();
+
+            if (_sourceCompositeCollider == null)
+            {
+                bool hadRigidbody = _sourceRigidbody != null;
+                _sourceCompositeCollider = gameObject.AddComponent<CompositeCollider2D>();
+                _createdCompositeCollider = true;
+                _sourceRigidbody = GetComponent<Rigidbody2D>();
+                _createdRigidbody = !hadRigidbody && _sourceRigidbody != null;
+            }
+
+            if (_sourceRigidbody == null)
+            {
+                DestroyRuntimeWaveCollider();
+                return false;
+            }
+
+            if (_createdRigidbody)
+                _sourceRigidbody.bodyType = RigidbodyType2D.Static;
+
+            _originalCompositeColliderEnabled = _sourceCompositeCollider.enabled;
+            _originalGeometryType = _sourceCompositeCollider.geometryType;
+            _originalGenerationType = _sourceCompositeCollider.generationType;
+
+            tilemapCollider.enabled = true;
+            tilemapCollider.compositeOperation = Collider2D.CompositeOperation.Merge;
+            _sourceCompositeCollider.enabled = true;
+            _sourceCompositeCollider.geometryType = CompositeCollider2D.GeometryType.Outlines;
+            _sourceCompositeCollider.generationType = CompositeCollider2D.GenerationType.Manual;
+
+            if (tilemapCollider.hasTilemapChanges)
                 tilemapCollider.ProcessTilemapChanges();
+
+            _sourceCompositeCollider.GenerateGeometry();
+
+            if (_sourceCompositeCollider.pathCount == 0)
+            {
+                DestroyRuntimeWaveCollider();
+                return false;
+            }
+
+            _runtimeColliderRoot = new GameObject("Runtime Wave Collider");
+            _runtimeColliderRoot.layer = gameObject.layer;
+            _runtimeColliderRoot.transform.SetParent(transform, false);
+
+            for (int pathIndex = 0; pathIndex < _sourceCompositeCollider.pathCount; pathIndex++)
+            {
+                int pointCount = _sourceCompositeCollider.GetPathPointCount(pathIndex);
+
+                if (pointCount < 2)
+                    continue;
+
+                Vector2[] sourcePoints = new Vector2[pointCount];
+                _sourceCompositeCollider.GetPath(pathIndex, sourcePoints);
+
+                bool alreadyClosed = Vector2.SqrMagnitude(
+                    sourcePoints[0] - sourcePoints[pointCount - 1]) < 0.000001f;
+                int runtimePointCount = alreadyClosed ? pointCount : pointCount + 1;
+                Vector2[] closedPoints = new Vector2[runtimePointCount];
+
+                for (int pointIndex = 0; pointIndex < pointCount; pointIndex++)
+                    closedPoints[pointIndex] = sourcePoints[pointIndex];
+
+                if (!alreadyClosed)
+                    closedPoints[runtimePointCount - 1] = sourcePoints[0];
+
+                EdgeCollider2D edgeCollider = _runtimeColliderRoot.AddComponent<EdgeCollider2D>();
+                edgeCollider.sharedMaterial = _sourceCompositeCollider.sharedMaterial;
+                edgeCollider.isTrigger = _sourceCompositeCollider.isTrigger;
+                edgeCollider.usedByEffector = _sourceCompositeCollider.usedByEffector;
+                edgeCollider.edgeRadius = _sourceCompositeCollider.edgeRadius;
+                edgeCollider.points = closedPoints;
+
+                _colliderPaths.Add(new DeformableColliderPath
+                {
+                    Collider = edgeCollider,
+                    OriginalPoints = closedPoints,
+                    DeformedPoints = new Vector2[runtimePointCount]
+                });
+            }
+
+            if (_colliderPaths.Count == 0)
+            {
+                DestroyRuntimeWaveCollider();
+                return false;
+            }
+
+            tilemapCollider.enabled = false;
+            _sourceCompositeCollider.enabled = false;
+
+            return true;
+        }
+
+        private void UpdateRuntimeWaveCollider()
+        {
+            if (!animateTileCollider || _runtimeColliderRoot == null)
+                return;
+
+            bool hasActiveWave = HasActiveWave();
+
+            if (!hasActiveWave && !_runtimeColliderDeformed)
+                return;
+
+            float sampleTime = Time.time;
+
+            foreach (DeformableColliderPath path in _colliderPaths)
+            {
+                for (int index = 0; index < path.OriginalPoints.Length; index++)
+                {
+                    Vector2 originalPoint = path.OriginalPoints[index];
+                    path.DeformedPoints[index] = hasActiveWave
+                        ? originalPoint + EvaluateLocalWaveOffset(originalPoint, sampleTime)
+                        : originalPoint;
+                }
+
+                path.Collider.points = path.DeformedPoints;
+            }
+
+            _runtimeColliderDeformed = hasActiveWave;
+        }
+
+        private void RestoreSourceColliders()
+        {
+            if (tilemapCollider != null)
+            {
+                tilemapCollider.compositeOperation = _originalCompositeOperation;
+                tilemapCollider.enabled = _originalTilemapColliderEnabled;
+            }
+
+            if (_sourceCompositeCollider != null && !_createdCompositeCollider)
+            {
+                _sourceCompositeCollider.geometryType = _originalGeometryType;
+                _sourceCompositeCollider.generationType = _originalGenerationType;
+                _sourceCompositeCollider.enabled = _originalCompositeColliderEnabled;
+
+                if (_sourceCompositeCollider.enabled)
+                    _sourceCompositeCollider.GenerateGeometry();
+            }
+        }
+
+        private void DestroyRuntimeWaveCollider()
+        {
+            RestoreSourceColliders();
+
+            if (_runtimeColliderRoot != null)
+                Destroy(_runtimeColliderRoot);
+
+            if (_createdCompositeCollider && _sourceCompositeCollider != null)
+                Destroy(_sourceCompositeCollider);
+
+            if (_createdRigidbody && _sourceRigidbody != null)
+                Destroy(_sourceRigidbody);
+
+            _runtimeColliderRoot = null;
+            _sourceCompositeCollider = null;
+            _sourceRigidbody = null;
+            _createdCompositeCollider = false;
+            _createdRigidbody = false;
+            _runtimeColliderDeformed = false;
+            _colliderPaths.Clear();
         }
 
         private void ApplyWaveSettings()
         {
             surfaceRenderer.GetPropertyBlock(_propertyBlock);
-
             _propertyBlock.SetFloat(ImpactFrequencyId, impactFrequency);
             _propertyBlock.SetFloat(ImpactSpeedId, impactSpeed);
             _propertyBlock.SetFloat(ImpactFalloffId, impactFalloff);
             _propertyBlock.SetFloat(ImpactDecayId, impactDecay);
             _propertyBlock.SetFloat(WaveHeightId, visualWaveHeight);
             _propertyBlock.SetFloat(MaxCombinedWaveId, maxCombinedVisualOffset);
-
+            _propertyBlock.SetFloat(WaveDurationId, visualWaveDuration);
             surfaceRenderer.SetPropertyBlock(_propertyBlock);
         }
 
@@ -530,7 +703,7 @@ namespace JellyMario.Jelly
 
         private void OnDisable()
         {
-            ResetTileColliderWaves();
+            DestroyRuntimeWaveCollider();
 
             if (surfaceRenderer != null && _propertyBlock != null)
                 ClearAllVisualWaves();
