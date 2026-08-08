@@ -74,8 +74,8 @@ namespace JellyMario.UI
             // DB에 선택 캐릭터와 닉네임 전송
             WebManager.Instance.SubmitProfile(nickname, selectedCharacter);
 
-            // TODO: 타이머 시작
-            // TimerManager.Instance.StartTimer();
+            // 타이머 시작
+            TimerManager.Instance.StartTimer();
 
             // 다음 씬 이동
             int currentIndex = SceneManager.GetActiveScene().buildIndex;
