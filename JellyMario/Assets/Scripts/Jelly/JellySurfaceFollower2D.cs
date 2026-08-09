@@ -77,6 +77,37 @@ namespace JellyMario.Jelly
                 ClearSurface();
         }
 
+        public bool TryStartFollowing(Collision2D collision)
+        {
+            _followingEnabled = true;
+            UpdateSurfaceContact(collision);
+
+            return IsFollowingSurface;
+        }
+
+        public bool TryStartFollowing(
+            Collider2D surfaceCollider,
+            Vector2 contactPoint,
+            Vector2 contactNormal)
+        {
+            if (surfaceCollider == null ||
+                contactNormal.y <= minimumGroundNormalY)
+                return false;
+
+            JellySurfaceWave surfaceWave =
+                surfaceCollider.GetComponentInParent<JellySurfaceWave>();
+
+            if (surfaceWave == null)
+                return false;
+
+            _followingEnabled = true;
+            _surfaceWave = surfaceWave;
+            _contactPoint = contactPoint;
+            _contactNormal = contactNormal.normalized;
+
+            return true;
+        }
+
         public void ClearSurface()
         {
             _surfaceWave = null;

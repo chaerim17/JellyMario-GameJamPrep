@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7648452457097641232, guid: 180718edc1cf72748b367642a27c669c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -136,7 +136,8 @@ GameObject:
   - component: {fileID: 8636279211214688498}
   - component: {fileID: 5080523629871038731}
   - component: {fileID: 3263509058861357749}
-  m_Layer: 0
+  - component: {fileID: 3263509058861357750}
+  m_Layer: 12
   m_Name: FrogEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,7 +186,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &8636279211214688498
 MonoBehaviour:
@@ -206,19 +207,17 @@ MonoBehaviour:
   - {fileID: -5806840172668023785, guid: ce187d5e95529d743823efbb00931051, type: 3}
   - {fileID: -2090344530975614803, guid: c1aa9b949b4b5464ea0d609073f95870, type: 3}
   moveFrameTime: 0.5
-  hitFrames: []
-  hitFrameTime: 0.5
   dieFrames:
   - {fileID: -2090344530975614803, guid: c1aa9b949b4b5464ea0d609073f95870, type: 3}
   dieFrameTime: 0.5
   jumpPower: 11
-  jumpDelay: 2
-  groundCheck: {fileID: 958276377365187989}
-  checkRadius: 0.1
+  jumpDelay: 0
+  movePointXs: []
+  pointArrivalDistance: 0.35
   movePower: -3
   direction: 1
---- !u!60 &5080523629871038731
-PolygonCollider2D:
+--- !u!70 &5080523629871038731
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -251,33 +250,9 @@ PolygonCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.64, y: 0.57}
-    newSize: {x: 0.64, y: 0.57}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.32, y: -0.24499999}
-      - {x: 0.32, y: -0.195}
-      - {x: 0.31, y: -0.175}
-      - {x: 0.32, y: -0.13499999}
-      - {x: 0.31, y: 0.065}
-      - {x: 0.22999999, y: 0.114999995}
-      - {x: 0.14, y: 0.275}
-      - {x: -0.049999997, y: 0.265}
-      - {x: -0.25, y: 0.275}
-      - {x: -0.29999998, y: 0.085}
-      - {x: -0.29, y: -0.145}
-      - {x: -0.32, y: -0.255}
-      - {x: -0.28, y: -0.285}
-      - {x: 0.28, y: -0.285}
-  m_UseDelaunayMesh: 1
+  m_Offset: {x: 0, y: -0.015}
+  m_Size: {x: 0.62, y: 0.54}
+  m_Direction: 1
 --- !u!114 &3263509058861357749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,3 +275,17 @@ MonoBehaviour:
   sideExpansion: 1.15
   visualHalfSize: {x: 0.5, y: 0.5}
   anchorStrength: 1
+--- !u!114 &3263509058861357750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6277635571887105497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c069bbe70194d0a895feb48364ac824, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellySurfaceFollower2D
+  minimumGroundNormalY: 0.5
+  cancelGroundNormalVelocity: 1
