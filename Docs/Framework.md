@@ -279,6 +279,7 @@ Scenes
 |   ├── PlayerSpawn
 |   │    └── Player
 |   |
+|   ├── EventSystem
 |   └── Manager
 |
 └── Tutorial
