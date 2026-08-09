@@ -1,5 +1,5 @@
-using JellyMario.Player;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JellyMario.Enemy
@@ -8,7 +8,6 @@ namespace JellyMario.Enemy
     {
         Idle,
         Move,
-        Hit,
         Die
     }
 
@@ -23,26 +22,92 @@ namespace JellyMario.Enemy
         [SerializeField] private Sprite[] moveFrames;
         [SerializeField] private float moveFrameTime = 0.5f;
 
-        [Header("Hit 설정")]
-        [SerializeField] private Sprite[] hitFrames;
-        [SerializeField] private float hitFrameTime = 0.5f;
-
         [Header("Die 설정")]
         [SerializeField] private Sprite[] dieFrames;
         [SerializeField] private float dieFrameTime = 0.5f;
 
         private SpriteRenderer _spriteRenderer;
         private Coroutine _animationCoroutine;
+        private bool _hasInitializedState;
+        private bool _restartAnimationOnEnable;
+
+        protected SpriteRenderer CachedSpriteRenderer => _spriteRenderer;
 
         public EnemyState CurrentState { get; private set; }
+
+        protected Vector2[] CacheWaypointLocalPositions(
+            Transform[] movePoints)
+        {
+            List<Vector2> positions = new List<Vector2>();
+
+            if (movePoints == null)
+                return positions.ToArray();
+
+            foreach (Transform movePoint in movePoints)
+            {
+                if (movePoint == null)
+                    continue;
+
+                positions.Add(movePoint.localPosition);
+            }
+
+            return positions.ToArray();
+        }
+
+        protected Vector2 WaypointLocalToWorld(Vector2 localPosition)
+        {
+            if (transform.parent == null)
+                return localPosition;
+
+            return transform.parent.TransformPoint(localPosition);
+        }
 
         // 적 초기화
         protected virtual void Awake()
         {
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
-            CurrentState = EnemyState.Idle;
-            ChangeState(CurrentState);
+            IgnoreOtherEnemyCollisions();
+
+            ChangeState(EnemyState.Idle);
+        }
+
+        private void IgnoreOtherEnemyCollisions()
+        {
+            Collider2D[] ownColliders = GetComponentsInChildren<Collider2D>(true);
+            EnemyBase[] enemies = Object.FindObjectsByType<EnemyBase>(FindObjectsInactive.Include);
+
+            foreach (EnemyBase otherEnemy in enemies)
+            {
+                if (otherEnemy == null || otherEnemy == this)
+                    continue;
+
+                Collider2D[] otherColliders =
+                    otherEnemy.GetComponentsInChildren<Collider2D>(true);
+
+                foreach (Collider2D ownCollider in ownColliders)
+                {
+                    foreach (Collider2D otherCollider in otherColliders)
+                    {
+                        if (ownCollider != null && otherCollider != null)
+                            Physics2D.IgnoreCollision(ownCollider, otherCollider, true);
+                    }
+                }
+            }
+        }
+
+        protected virtual void OnEnable()
+        {
+            if (_restartAnimationOnEnable && _animationCoroutine == null)
+                SetAnimation(CurrentState);
+
+            _restartAnimationOnEnable = false;
+        }
+
+        protected virtual void OnDisable()
+        {
+            _restartAnimationOnEnable = _hasInitializedState;
+            StopCurrentAnimation();
         }
 
         // 프레임마다 호출되는 업데이트 메서드
@@ -68,11 +133,6 @@ namespace JellyMario.Enemy
             ChangeState(EnemyState.Move);
         }
 
-        // 피격
-        public virtual void Hit()
-        {
-            ChangeState(EnemyState.Hit);
-        }
         // 사망
         public virtual void Die()
         {
@@ -82,10 +142,11 @@ namespace JellyMario.Enemy
         // 상태 변경
         protected void ChangeState(EnemyState newState)
         {
-            if (CurrentState == newState)
+            if (_hasInitializedState && CurrentState == newState)
                 return;
 
             CurrentState = newState;
+            _hasInitializedState = true;
             SetAnimation(newState);
         }
 
@@ -106,11 +167,6 @@ namespace JellyMario.Enemy
                     selectedFrameTime = moveFrameTime;
                     break;
 
-                case EnemyState.Hit:
-                    selectedFrames = hitFrames;
-                    selectedFrameTime = hitFrameTime;
-                    break;
-
                 case EnemyState.Die:
                     selectedFrames = dieFrames;
                     selectedFrameTime = dieFrameTime;
@@ -122,20 +178,36 @@ namespace JellyMario.Enemy
                     return;
             }
 
-            if (selectedFrames == null || selectedFrames.Length == 0) {
+            StopCurrentAnimation();
+
+            if (selectedFrames == null || selectedFrames.Length == 0) 
+            {
                 Debug.LogWarning($"{state} 이미지가 등록되지 않았습니다.", this);
 
                 return;
             }
 
-            if (_animationCoroutine != null)
-                StopCoroutine(_animationCoroutine);
+            if (_spriteRenderer == null)
+            {
+                Debug.LogWarning("Enemy animation requires a SpriteRenderer.", this);
+                return;
+            }
 
             _animationCoroutine = StartCoroutine(PlayAnimation(selectedFrames, selectedFrameTime));
         }
+
+        private void StopCurrentAnimation()
+        {
+            if (_animationCoroutine == null)
+                return;
+
+            StopCoroutine(_animationCoroutine);
+            _animationCoroutine = null;
+        }
+
         private IEnumerator PlayAnimation(Sprite[] frames, float frameTime)
         {
-            WaitForSeconds wait = new WaitForSeconds(frameTime);
+            WaitForSeconds wait = new WaitForSeconds(Mathf.Max(frameTime, 0.01f));
 
             do {
                 foreach (Sprite frame in frames) {

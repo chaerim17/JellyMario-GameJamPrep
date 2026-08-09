@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: -8969801523357219522, guid: a8f965abda1f33b44bf58c32da5d6b83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -105,7 +105,8 @@ GameObject:
   - component: {fileID: -1400225430297696980}
   - component: {fileID: 5484493913818374572}
   - component: {fileID: 6150694591758340541}
-  m_Layer: 0
+  - component: {fileID: 6150694591758340542}
+  m_Layer: 12
   m_Name: SnailEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,14 +148,15 @@ MonoBehaviour:
   - {fileID: 5566351642125101371, guid: 6a5e2577572cf3e4399fe04d2f548f96, type: 3}
   - {fileID: 5728511116856076090, guid: 1a228acf2720ed746890db41eb72eac3, type: 3}
   moveFrameTime: 0.5
-  hitFrames:
-  - {fileID: 8045200227994657405, guid: 3af662b497d00d54d941262d6296439f, type: 3}
-  hitFrameTime: 0.5
   dieFrames:
   - {fileID: 8045200227994657405, guid: 3af662b497d00d54d941262d6296439f, type: 3}
   dieFrameTime: 0.5
+  movePoints: []
   moveSpeed: 2
   moveRange: 5
+  pointArrivalDistance: 0.1
+  slopeRotationSpeed: 360
+  groundProbeDistance: 1
 --- !u!60 &-1400225430297696980
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -263,3 +265,17 @@ MonoBehaviour:
   sideExpansion: 1.15
   visualHalfSize: {x: 0.5, y: 0.5}
   anchorStrength: 1
+--- !u!114 &6150694591758340542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2246221082750590943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c069bbe70194d0a895feb48364ac824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellySurfaceFollower2D
+  minimumGroundNormalY: 0.5
+  cancelGroundNormalVelocity: 1
