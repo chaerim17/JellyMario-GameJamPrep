@@ -289,6 +289,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TimerUI
       objectReference: {fileID: 0}
+    - target: {fileID: 6796949648640123169, guid: 13aeff6df88bbdc4daf0b2b27c47c14e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -49041,13 +49045,6 @@ MonoBehaviour:
   animateTileCollider: 1
   surfaceTilemap: {fileID: 511775563}
   tilemapCollider: {fileID: 511775566}
-  colliderWaveRadius: 6
-  colliderWaveHeight: 0.12
-  colliderWaveTravelSpeed: 2.5
-  colliderWaveFrequency: 2.8
-  colliderWaveDecay: 1
-  colliderDistanceFalloff: 0.18
-  maxCombinedColliderOffset: 0.35
 --- !u!1 &518980734
 GameObject:
   m_ObjectHideFlags: 0
