@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class MissileController : MonoBehaviour
 {
     [Header("Missile")]
-    [SerializeField] private float moveSpeed = 3f;        // 이동 속도
+    [SerializeField] private float moveSpeed = 1f;        // 이동 속도
     [SerializeField] private float rotateSpeed = 3f;    // 회전 속도
 
     // 플레이어

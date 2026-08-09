@@ -89,22 +89,29 @@ public class BossController : BossBase
     }
 
     // 보스 패턴 순서
-    private IEnumerator BossPatternRoutine()
+    private IEnumerator BossPatternRoutine(int startPattern = 0)
     {
         yield return new WaitForSeconds(2f);
 
-        yield return StartPattern(0, GetPattern1Duration(), Pattern1_Move());
+        if (startPattern <= 0)
+            yield return StartPattern(0, GetPattern1Duration(), Pattern1_Move());
 
-        yield return StartPattern(1, GetPattern2Duration(), Pattern2_Breath());
+        if (startPattern <= 1)
+            yield return StartPattern(1, GetPattern2Duration(), Pattern2_Breath());
 
-        // 2페이즈 진입
-        yield return Blink();
-        ChangeToPhase2(); // 보스 모습 변경
+        if (startPattern <= 2)
+        {
+            // 2페이즈 진입
+            yield return Blink();
+            ChangeToPhase2(); // 보스 모습 변경
 
-        yield return StartPattern(2, GetPattern3Duration(), Pattern3_SpawnMonster());
+            yield return StartPattern(2, GetPattern3Duration(), Pattern3_SpawnMonster());
+        }
 
-        yield return StartPattern(3, GetPattern4Duration(), Pattern4_SpawnTrap());
+        if (startPattern <= 3)
+            yield return StartPattern(3, GetPattern4Duration(), Pattern4_SpawnTrap());
 
+        // ===== 클리어 처리 =====
         // 타이머 DB에 저장
         TimerManager.Instance.StopTimer();
 
@@ -122,7 +129,7 @@ public class BossController : BossBase
         Die();
 
         // 타이틀 화면으로 이동
-        SceneManager.LoadScene("Init");
+        SceneManager.LoadScene("MainMenu");
     }
 
     // 패턴1 : 플레이어 시작 위치로 이동
@@ -426,7 +433,7 @@ public class BossController : BossBase
             currentHp = 4;
 
             bossUI.SetProgress(1f);
-            StartCoroutine(StartPattern(0, GetPattern1Duration(), Pattern1_Move()));
+            StartCoroutine(BossPatternRoutine(0));
         }
 
         if (Keyboard.current.digit2Key.wasPressedThisFrame)
@@ -438,7 +445,7 @@ public class BossController : BossBase
             currentHp = 3;
 
             bossUI.SetProgress(0.75f);
-            StartCoroutine(StartPattern(1, GetPattern2Duration(), Pattern2_Breath()));
+            StartCoroutine(BossPatternRoutine(1));
         }
 
         if (Keyboard.current.digit3Key.wasPressedThisFrame)
@@ -452,7 +459,7 @@ public class BossController : BossBase
 
             ChangeToPhase2(); // 보스 모습 변경
             bossUI.SetProgress(0.5f);
-            StartCoroutine(StartPattern(2, GetPattern3Duration(), Pattern3_SpawnMonster()));
+            StartCoroutine(BossPatternRoutine(2));
         }
 
         if (Keyboard.current.digit4Key.wasPressedThisFrame)
@@ -465,7 +472,7 @@ public class BossController : BossBase
 
             ChangeToPhase2(); // 보스 모습 변경
             bossUI.SetProgress(0.25f);
-            StartCoroutine(StartPattern(3, GetPattern4Duration(), Pattern4_SpawnTrap()));
+            StartCoroutine(BossPatternRoutine(3));
         }
 
         // 보스 즉시 사망
@@ -486,7 +493,7 @@ public class BossController : BossBase
             Die();
 
             // 타이틀 화면으로 이동
-            SceneManager.LoadScene("Init");
+            SceneManager.LoadScene("MainMenu");
         }
     }
 

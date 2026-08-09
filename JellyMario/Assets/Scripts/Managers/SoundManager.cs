@@ -29,9 +29,11 @@ namespace JellyMario.Managers
             // 배경음 AudioSource 설정
             _bgmSource = gameObject.AddComponent<AudioSource>();
             _bgmSource.loop = true;
+            _bgmSource.volume = 0.1f;
 
             // 효과음 AudioSource 설정
             _sfxSource = gameObject.AddComponent<AudioSource>();
+            _sfxSource.volume = 0.3f;
 
             // 배경음 재생
             PlayBGM();
