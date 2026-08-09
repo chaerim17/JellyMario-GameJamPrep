@@ -141,6 +141,12 @@ namespace JellyMario.Player
         // 충돌 처리
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            if (IsDeathLayer(collision.gameObject))
+            {
+                Die();
+                return;
+            }
+
             if (collision.contactCount == 0)
                 return;
 
@@ -188,19 +194,29 @@ namespace JellyMario.Player
             }
         }
 
+        private static bool IsDeathLayer(GameObject target)
+        {
+            if (target == null)
+                return false;
+
+            int layer = target.layer;
+
+            return layer == LayerMask.NameToLayer("Monster") ||
+                   layer == LayerMask.NameToLayer("Hazard") ||
+                   layer == LayerMask.NameToLayer("DeathZone");
+        }
+
         // 트리거 처리
         private void OnTriggerEnter2D(Collider2D other)
         {
-            int layer = other.gameObject.layer;
-
-            if (layer == LayerMask.NameToLayer("Hazard") || layer == LayerMask.NameToLayer("DeathZone"))
+            if (IsDeathLayer(other.gameObject))
             {
                 Die();
 
                 return;
             }
 
-            if (layer == LayerMask.NameToLayer("Goal Flag"))
+            if (other.gameObject.layer == LayerMask.NameToLayer("Goal Flag"))
             {
                 if (SceneManager.GetActiveScene().name != "MainMenu")
                     StageClear();
