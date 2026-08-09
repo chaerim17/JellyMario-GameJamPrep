@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 604825701336161573, guid: 372aade3b48f29247b6bff62eac09632, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -145,7 +145,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -190,7 +190,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -220,11 +220,10 @@ MonoBehaviour:
   moveFrames:
   - {fileID: 837902340402259332, guid: f44f7a3813ddf63409d07cbc3d955737, type: 3}
   moveFrameTime: 0.5
-  hitFrames:
-  - {fileID: -2993251020649910901, guid: 7329ac407b49d844cbc27eb03f61124d, type: 3}
-  hitFrameTime: 0.5
   dieFrames: []
   dieFrameTime: 0.5
+  fallSpeed: 3
+  fallDelay: 0.2
 --- !u!60 &-4977146943812979150
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -241,7 +240,7 @@ PolygonCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
