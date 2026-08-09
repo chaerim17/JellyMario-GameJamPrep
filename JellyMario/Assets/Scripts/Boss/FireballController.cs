@@ -5,11 +5,12 @@ using UnityEngine;
 public class FireballController : MonoBehaviour
 {
     [Header("Move")]
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private float directionChangeInterval = 0.5f;
+    [SerializeField] private float lifeTime = 8f;
 
-    [SerializeField] private float lifeTime = 5f;
-
-    private Vector2 direction;
+    private Vector2 moveDirection;
+    private float directionTimer;
 
     private SpriteRenderer spriteRenderer;
     private PolygonCollider2D polygonCollider;
@@ -24,6 +25,9 @@ public class FireballController : MonoBehaviour
 
     private void Start()
     {
+        // 처음 방향 랜덤
+        moveDirection = Random.insideUnitCircle.normalized;
+
         // 현재 스프라이트에 맞게 충돌박스 적용
         UpdateCollider();
 
@@ -33,13 +37,22 @@ public class FireballController : MonoBehaviour
 
     private void Update()
     {
-        transform.position += (Vector3)(direction * moveSpeed * Time.deltaTime);
-    }
+        directionTimer += Time.deltaTime;
 
-    // 발사 방향 설정
-    public void SetDirection(Vector2 dir)
-    {
-        direction = dir.normalized;
+        // 일정 시간마다 방향 살짝 변경
+        if (directionTimer >= directionChangeInterval)
+        {
+            directionTimer = 0f;
+
+            moveDirection =
+                (moveDirection + Random.insideUnitCircle)
+                .normalized;
+        }
+
+        transform.position +=
+            (Vector3)(moveDirection *
+                      moveSpeed *
+                      Time.deltaTime);
     }
 
     // 플레이어와 충돌 시 처리

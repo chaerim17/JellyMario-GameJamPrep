@@ -188,15 +188,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baa51813b15657c4888deae342c3d381, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterController
-  idleSprites:
-  - {fileID: -7935564780887180644, guid: 03bc82c82c12bec44a93650bcf513bfc, type: 3}
-  - {fileID: 3761383361637173429, guid: 8f8af4904d940dc4fb812dc9b93a59b3, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::BossSlimeController
+  idleSprites: []
   animationSpeed: 0.3
   moveSpeed: 2
-  direction: -1
-  launchForce: {x: -3, y: 6}
+  rotationSpeed: 180
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 36864
-  wallCheckDistance: 0.4
+    m_Bits: 49152
+  wallCheckDistance: 0.8

@@ -314,9 +314,6 @@ public class BossController : BossBase
             FireballController controller =
                 fireball.GetComponent<FireballController>();
 
-            if (controller != null)
-                controller.SetDirection(direction);
-
             // 다음 화염탄을 조금 있다가 생성
             yield return new WaitForSeconds(fireballSpacing);
         }

@@ -186,5 +186,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c282ab16a8d640f40a5ac931ecdef0d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FireballController
-  moveSpeed: 5
-  lifeTime: 7
+  moveSpeed: 3
+  directionChangeInterval: 0.5
+  lifeTime: 8
