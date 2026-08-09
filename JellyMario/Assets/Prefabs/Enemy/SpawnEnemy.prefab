@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_MaskInteraction: 0
   m_Sprite: {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: -6470247247272875207}
   - component: {fileID: -5063663392490341993}
   - component: {fileID: -7842353953501980672}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SpawnEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,8 +146,6 @@ MonoBehaviour:
   moveFrames:
   - {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
   moveFrameTime: 0.5
-  hitFrames: []
-  hitFrameTime: 0.5
   dieFrames:
   - {fileID: -722397568148816965, guid: 920f2967e9ace4b4cb794a9e89a9bca6, type: 3}
   dieFrameTime: 0.5
@@ -170,7 +168,7 @@ PolygonCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -215,14 +213,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1301543229036897812}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
