@@ -13,9 +13,6 @@ namespace JellyMario.Managers
     // 웹(API)를 관리하는 매니저 - Todo : ApiRoutes.cs로 이동 예정
     public class WebManager : Singleton<WebManager>
     {
-        [SerializeField]
-        private RankingUI rankingUI;
-
         // DB 주소와 Publishable Key
         private const string API_URL =
             "https://ifobygojapncuwpwfvwt.supabase.co/rest/v1/ranking";
@@ -44,7 +41,7 @@ namespace JellyMario.Managers
             {
                 string json = request.downloadHandler.text;
                 OnRankingReceived(json);
-                Debug.Log($"GET request succeeded: {json}");
+                //Debug.Log($"GET request succeeded: {json}");
             }
             else
             {
@@ -139,12 +136,20 @@ namespace JellyMario.Managers
                     wrappedJson
                 );
 
-            Debug.Log($"rankingUI = {rankingUI}");
             Debug.Log($"response = {response}");
 
             if (response != null)
             {
                 Debug.Log($"rankings = {response.rankings}");
+            }
+
+            RankingUI rankingUI =
+                FindFirstObjectByType<RankingUI>();
+
+            if (rankingUI == null)
+            {
+                Debug.LogError("RankingUI not found");
+                return;
             }
 
             rankingUI.ShowRanking(response.rankings);

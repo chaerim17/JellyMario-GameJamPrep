@@ -378,6 +378,7 @@ GameObject:
   - component: {fileID: 1702438475}
   - component: {fileID: 1702438476}
   - component: {fileID: 1702438477}
+  - component: {fileID: 1702438478}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -501,7 +502,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df3284c70bf814649b711b387cc92f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Managers.WebManager
-  rankingUI: {fileID: 0}
+--- !u!114 &1702438478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702438468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00481de7f4d5feb42836a61d9192070e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimerManager
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
