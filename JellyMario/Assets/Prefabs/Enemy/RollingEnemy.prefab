@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_MaskInteraction: 0
   m_Sprite: {fileID: -282803389941045344, guid: cdd930932ed89cb418cc27466a04a95c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -104,8 +104,7 @@ GameObject:
   - component: {fileID: 7032323754949145832}
   - component: {fileID: -4963228360181849423}
   - component: {fileID: -6022817588503799554}
-  - component: {fileID: 4456760033339827073}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RollingEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,8 +146,6 @@ MonoBehaviour:
   - {fileID: -937281917942298695, guid: 9aed22c0120fff54a9814101dee44405, type: 3}
   - {fileID: 8257651789904646902, guid: 58dd8b2621693ac46bcf1549f928df3d, type: 3}
   moveFrameTime: 0.2
-  hitFrames: []
-  hitFrameTime: 0.5
   dieFrames:
   - {fileID: -937281917942298695, guid: 9aed22c0120fff54a9814101dee44405, type: 3}
   dieFrameTime: 0.5
@@ -174,7 +171,7 @@ PolygonCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -248,7 +245,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -260,25 +257,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4456760033339827073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5085087918780073592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 649bc57af8d785d4f90cff09fc0a9821, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellyVisual
-  deformationPivot: {fileID: 0}
-  visual: {fileID: 1460303170615472282}
-  stiffness: 100
-  damping: 7
-  maxDeformation: 0.5
-  impactResponse: 0.045
-  stretchMultiplier: 2
-  sideExpansion: 1.15
-  visualHalfSize: {x: 0.5, y: 0.5}
-  anchorStrength: 1
