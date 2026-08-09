@@ -52,8 +52,8 @@ namespace JellyMario.UI
 
         public void OnClickStart()
         {
-            Debug.Log($"WebManager = {WebManager.Instance}");
-            Debug.Log("Start 버튼 눌림");
+            //Debug.Log($"WebManager = {WebManager.Instance}");
+            //Debug.Log("Start 버튼 눌림");
 
             if (selectedCharacter == -1)
             {
@@ -69,13 +69,23 @@ namespace JellyMario.UI
                 return;
             }
 
-            Debug.Log($"WebManager = {WebManager.Instance}");
+            // 플레이어 정보 저장
+            PlayerPrefs.SetString("PlayerName", nickname);
+            PlayerPrefs.SetInt("SelectedCharacter", selectedCharacter);
+
+            WebManager.Instance.SubmitProfile(
+                nickname,
+                selectedCharacter
+            );
+
+            //Debug.Log($"WebManager = {WebManager.Instance}");
            
             // DB에 선택 캐릭터와 닉네임 전송
             WebManager.Instance.SubmitProfile(nickname, selectedCharacter);
-
-            // TODO: 타이머 시작
-            // TimerManager.Instance.StartTimer();
+            Debug.Log($"TimerManager = {TimerManager.Instance}");
+            
+            // 타이머 시작
+            TimerManager.Instance.StartTimer();
 
             // 다음 씬 이동
             int currentIndex = SceneManager.GetActiveScene().buildIndex;

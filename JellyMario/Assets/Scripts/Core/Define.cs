@@ -15,7 +15,7 @@
         Init,
         MainMenu,
         Tutorial,
-        Easy,
-        Hard
+        Hard,
+        Boss
     }
 }

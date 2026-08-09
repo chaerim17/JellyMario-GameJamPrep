@@ -10,14 +10,20 @@ namespace JellyMario.UI
         public override void Initialize()
         {
             base.Initialize();
+            Debug.Log("TimerManager Created");
         }
+
 
         private void Update()
         {
             if (TimerManager.Instance == null) return;
 
-            timerText.text =
-                TimerManager.Instance.CurrentTime.ToString("00.00");
+            float currentTime = TimerManager.Instance.CurrentTime;
+
+            int minutes = Mathf.FloorToInt(currentTime / 60);
+            int seconds = Mathf.FloorToInt(currentTime % 60);
+
+            timerText.text = $"{minutes:00}:{seconds:00}";
         }
     }
 }

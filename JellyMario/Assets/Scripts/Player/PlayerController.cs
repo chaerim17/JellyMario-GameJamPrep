@@ -130,6 +130,8 @@ namespace JellyMario.Player
         {
             base.Jump();
 
+            ManagersHub.Sound?.PlayJumpSFX();
+
             jellySurfaceFollower?.SetFollowingEnabled(false);
 
             Vector2 direction = jumpDirection.up.normalized;
@@ -229,9 +231,11 @@ namespace JellyMario.Player
 
             jellySurfaceFollower?.SetFollowingEnabled(false);
 
+            ManagersHub.Sound?.PlayDeathSFX();
+
             Debug.Log("Player Dead");
 
-            // TODO : 사망 처리
+            // 사망 처리
             // 현재 씬 다시 시작
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
@@ -240,7 +244,7 @@ namespace JellyMario.Player
         {
             Debug.Log("Stage Clear");
 
-            // TODO : 클리어 처리
+            // 클리어 처리
             int currentScene = SceneManager.GetActiveScene().buildIndex;
             int nextScene = currentScene + 1;
 

@@ -13,9 +13,6 @@ namespace JellyMario.Managers
     // 웹(API)를 관리하는 매니저 - Todo : ApiRoutes.cs로 이동 예정
     public class WebManager : Singleton<WebManager>
     {
-        [SerializeField]
-        private RankingUI rankingUI;
-
         // DB 주소와 Publishable Key
         private const string API_URL =
             "https://ifobygojapncuwpwfvwt.supabase.co/rest/v1/ranking";
@@ -25,13 +22,9 @@ namespace JellyMario.Managers
         private const string API_KEY =
             "sb_publishable_CeTXneXavNVq9EXdq4N9VQ_qvWSh2B1";
 
-        //TODO: 테스트 후 제거 예정
         protected override void Initialize()
         {
-            Debug.Log("WebManager Initialize");
-            //TestPostConnection();
-            //GetRanking();
-
+            base.Initialize();
         }
 
         // GET 요청을 보내는 공통 함수
@@ -48,7 +41,7 @@ namespace JellyMario.Managers
             {
                 string json = request.downloadHandler.text;
                 OnRankingReceived(json);
-                Debug.Log($"GET request succeeded: {json}");
+                //Debug.Log($"GET request succeeded: {json}");
             }
             else
             {
@@ -143,14 +136,23 @@ namespace JellyMario.Managers
                     wrappedJson
                 );
 
-            rankingUI.ShowRanking(response.rankings);
+            Debug.Log($"response = {response}");
 
-            foreach (RankingData ranking in response.rankings)
+            if (response != null)
             {
-                Debug.Log(
-                    $"{ranking.playerName} : {ranking.clearTime}"
-                );
+                Debug.Log($"rankings = {response.rankings}");
             }
+
+            RankingUI rankingUI =
+                FindFirstObjectByType<RankingUI>();
+
+            if (rankingUI == null)
+            {
+                Debug.LogError("RankingUI not found");
+                return;
+            }
+
+            rankingUI.ShowRanking(response.rankings);
         }
 
         public void SubmitProfile(string playerName, int characterId)

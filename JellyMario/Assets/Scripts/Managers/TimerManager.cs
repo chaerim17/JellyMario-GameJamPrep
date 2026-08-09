@@ -1,30 +1,23 @@
 using UnityEngine;
+using JellyMario.Core;
 
-public class TimerManager : MonoBehaviour
+public class TimerManager : Singleton<TimerManager>
 {
-    public static TimerManager Instance;
-
-    private float elapsedTime;
+    private float currentTime;
     private bool isRunning;
 
-    public float CurrentTime => elapsedTime;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
+    public float CurrentTime => currentTime;
 
     private void Update()
     {
-        if (isRunning)
-        {
-            elapsedTime += Time.deltaTime;
-        }
+        if (!isRunning)
+            return;
+
+        currentTime += Time.deltaTime;
     }
 
     public void StartTimer()
     {
-        elapsedTime = 0f;
         isRunning = true;
     }
 
@@ -33,8 +26,8 @@ public class TimerManager : MonoBehaviour
         isRunning = false;
     }
 
-    public float GetClearTime()
+    public void ResetTimer()
     {
-        return elapsedTime;
+        currentTime = 0f;
     }
 }
