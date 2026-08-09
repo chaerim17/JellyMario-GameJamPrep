@@ -204,5 +204,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b555981c814f0c04ebe3b68b9ad3f5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MissileController
-  moveSpeed: 3
+  moveSpeed: 1
   rotateSpeed: 3
