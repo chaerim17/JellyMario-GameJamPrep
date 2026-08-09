@@ -2,7 +2,12 @@
 
 ## 1. 프레임워크 설명
 
-게임 개발에 필요한 공통 프레임워크를 구축했습니다.
+Jelly Alien 프로젝트에서 사용하는 공통 시스템을 관리하기 위한
+클라이언트 프레임워크입니다.
+
+Manager 기반 구조를 사용하며,
+씬 관리, 플레이어 관리, 입력 처리, 사운드 관리,
+웹 API 통신 및 UI 시스템을 포함합니다.
 
 프로젝트 전반에서 사용하는 Core, Manager, Player, Enemy, Boss, UI, Network 등의 시스템을 역할별로 분리하여 관리할 수 있도록 구조를 구성했습니다.
 
@@ -16,21 +21,40 @@
 ```text
 Assets
 ├── Audio
+│   ├── BGM (Background Music)
+│   │   └── mixkit-deep-urban-623
+|   |
+│   └── SFX (Sound Effects)
+│       ├── mixkit-technological-futuristic-hum-2133
+│       ├── sfx_bump
+│       ├── sfx_coin
+│       ├── sfx_disappear
+│       ├── sfx_gem
+│       ├── sfx_hurt
+│       ├── sfx_jump
+│       ├── sfx_magic
+│       ├── sfx_select
+│       └── sfx_throw
+|
 ├── Materials
+│   ├── JellyGround.mat
+│   └── JellyGround.shader
+|
 ├── Prefabs
 │   ├── BossPattern
 │   │   ├── BossSlime
 │   │   ├── Fireball
 │   │   └── Missile
-│   ├── Enemy
-│   │   ├── BeeEnemy
-│   │   ├── BlockEnemy
-│   │   ├── FrogEnemy
-│   │   ├── RollingEnemy
-│   │   ├── SnailEnemy
-│   │   ├── SpawnEnemy
-│   │   └── Square
-├── Resources
+|   |
+│   └── Enemy
+│       ├── BeeEnemy
+│       ├── BlockEnemy
+│       ├── FrogEnemy
+│       ├── RollingEnemy
+│       ├── SnailEnemy
+│       ├── SpawnEnemy
+│       └── Square
+|
 ├── Scenes
 │   ├── Boss.unity
 │   ├── Hard.unity
@@ -63,42 +87,42 @@ Assets
 │   │   ├── JumpEnemy.cs
 │   │   ├── SpawnEnemy.cs
 │   │   └── SurfaceEnemy.cs
+|   |
+│   ├── Jelly
+│   │   ├── JellySurfaceWave.cs
+│   │   └── JellyVisual.cs
 │   │
 │   ├── Managers
 │   │   ├── GameManager.cs
 │   │   ├── InputManager.cs
 │   │   ├── PlayerManager.cs
-│   │   ├── ResourceManager.cs
 │   │   ├── SceneManagerEx.cs
 │   │   ├── SoundManager.cs
-│   │   ├── UIManager.cs
+│   │   ├── TimerManager.cs
 │   │   └── WebManager.cs
-│   │
-│   ├── Map
-│   │   ├── DeathZone.cs
-│   │   ├── GoalController.cs
-│   │   └── InteractableObject.cs
 │   │
 │   ├── Network
 │   │   ├── Request
+│   │   │   ├── SubmitProfileRequest.cs
 │   │   │   └── SubmitScoreRequest.cs
-│   │   ├── Response
-│   │   │    ├── RankingData.cs
-│   │   │    └── RankingResponse.cs
-│   │   └── ApiRoutes.cs
+|   |   |
+│   │   └── Response
+│   │        ├── RankingData.cs
+│   │        └── RankingResponse.cs
 │   │
 │   ├── Player
 │   │   ├── PlayerBase.cs
 │   │   └── PlayerController.cs
 │   │
-│   ├── UI
-│   │   ├── InGameUI.cs
-│   │   ├── MainMenuUI.cs
-│   │   ├── RankingUI.cs
-│   │   ├── ResultUI.cs
-│   │   └── UIBase.cs
-│   │
-│   └── Utils
+│   └── UI
+│       ├── BossUI.cs
+│       ├── InGameUI.cs
+│       ├── LoginUI.cs
+│       ├── MainMenuUI.cs
+│       ├── RankingUI.cs
+│       ├── ResultUI.cs
+│       ├── TimerUI.cs
+│       └── UIBase.cs
 │
 ├── Settings
 │   ├── Build Profiles
@@ -122,6 +146,7 @@ Assets
 │       ├── Grey
 │       ├── Red
 │       └── Yellow
+|
 ├── TextMesh Pro
 │   ├── Fonts
 │   │   ├── LiberationSans
@@ -129,10 +154,22 @@ Assets
 │   │
 │   ├── Resources
 │   │   ├── Fonts & Materials
+│   │   │   ├── BMKkubulim
+│   │   │   ├── BMKkubulim SDF
+│   │   │   ├── Cloudsofa_namgim-Regular
+│   │   │   ├── Cloudsofa_namgim-Regular SDF
+│   │   │   ├── HiKR-ExtraBold
+│   │   │   ├── HiKR-ExtraBold SDF
 │   │   │   ├── LiberationSans SDF
 │   │   │   ├── LiberationSans SDF - Drop Shadow
 │   │   │   ├── LiberationSans SDF - Fallback
-│   │   │   └── LiberationSans SDF - Outline
+│   │   │   ├── LiberationSans SDF - Outline
+│   │   │   ├── Mona12
+│   │   │   ├── Mona12 SDF
+│   │   │   ├── Mona12-Bold
+│   │   │   ├── Mona12-Bold SDF
+│   │   │   ├── x10y12pxDenkiChipHangul
+│   │   │   └── x10y12pxDenkiChipHangul SDF
 │   │   │
 │   │   ├── Style Sheets
 │   │   │   └── Default Style Sheet
@@ -144,7 +181,10 @@ Assets
 │   └── Shaders
 |
 └── UI
-    └── RankingPanel
+    ├── BossUI
+    ├── LoginPanel
+    ├── RankingPanel
+    └── TimerPanel
 ```
 
 ### 씬 구조
@@ -154,49 +194,55 @@ Scenes
 │   ├── Main Camera
 │   ├── Global Light 2D
 │   ├── Canvas
-│   ├── Eventsystem
+│   │   ├── BossUI
+│   │   └── TimerUI
+|   |
 │   ├── Grid
 │   │   ├── Ground
-│   │   └── Hazard
+│   │   ├── Wall
+│   │   ├── Hazard
+│   │   └── Background
+│   │       ├── Background_sky
+│   │       ├── Background_under
+│   │       └── Background_middle
 │   │
-│   ├── Background_sky
-│   ├── Background_under
-│   ├── Background
 │   ├── PlayerSpawn
 │   │   └── Player
 │   │
 │   ├── InputManager
 │   ├── Boss
-│   ├── CenterPoint
-│   ├── BreathSpawnPoint
-│   ├── MissileSpawnPoint
-│   ├── BossStartPoint
-│   ├── MonsterSpawnPoint1
-│   ├── MonsterSpawnPoint2
-│   ├── MonsterSpawnPoint3
-│   ├── MonsterSpawnPoint4
-│   ├── MonsterSpawnPoint5
-│   ├── MonsterSpawnPoint6
-│   └── PlayerSpawnPoint
+|   └── SpawnPoint
+│       ├── CenterPoint
+│       ├── BreathSpawnPoint
+│       ├── MissileSpawnPoint
+│       ├── BossStartPoint
+│       ├── MonsterSpawnPoint1
+│       ├── MonsterSpawnPoint2
+│       ├── MonsterSpawnPoint3
+│       ├── MonsterSpawnPoint4
+│       ├── MonsterSpawnPoint5
+│       ├── MonsterSpawnPoint6
+│       └── PlayerSpawnPoint
 |
 ├── Hard
 │   ├── Main Camera
 │   ├── Global Light 2D
 │   ├── Canvas
-│   ├── Eventsystem
+│   │   └── TimerUI
+|   |
 │   ├── Grid
 │   │   ├── Ground
 │   │   ├── Hazard
-│   │   └── Goal Flag
-│   │
-│   ├── Background
-│   ├── Background_sky
-│   ├── Background_under
-│   ├── PlayerSpawn
-│   │   └── Player
+│   │   ├── Goal Flag
+│   │   └── Background
+│   │       ├── Background_middle
+│   │       ├── Background_sky
+│   │       └── Background_under
 │   │
 │   ├── InputManager
-│   └── DeathZone
+│   ├── DeathZone
+│   └── PlayerSpawn
+│       └── Player
 │   
 ├── Init
 │   ├── Main Camera
@@ -207,30 +253,54 @@ Scenes
 │   ├── Main Camera
 │   ├── Global Light 2D
 │   ├── Canvas
-│   ├── Eventsystem
-│   ├── Grid
-│   │   └── Tilemap
+|   |   ├── RankingButtonUI
+|   |   ├── LoginPanel
+│   │   └── RankingPanel
 |   |
-│   └──Background
+│   ├── Grid
+|   |   ├── Ground
+|   |   ├── Goal Flag
+│   │   |    └── Trigger
+|   |   |
+│   │   ├── Title
+│   │   |    ├── Jelly Alien
+│   │   |    └── Notice
+|   |   |
+│   │   ├── Background
+│   │   |    ├── Background_middle
+│   │   |    ├── Background_sky
+│   │   |    └── Background_under
+│   |   |
+│   │   └── InvisibleWall
+│   |        ├── InvisibleWall_left
+│   |        ├── InvisibleWall_right
+│   │        └── InvisibleWall_top
+|   |
+|   ├── PlayerSpawn
+|   │    └── Player
+|   |
+|   └── Manager
 |
 └── Tutorial
     ├── Main Camera
     ├── Global Light 2D
     ├── Canvas
-    ├── Eventsystem
+    │    └── TimerUI
+    |
     ├── Grid
     │   ├── Ground
     │   ├── Hazard
-    │   └── Goal Flag
+    │   ├── Goal Flag
+    │   └── Background
+    │       ├── Background_middle
+    │       ├── Background_sky
+    │       └── Background_under
     │
     ├── PlayerSpawn
     │   └── Player
     │
     ├── DeathZone
-    ├── InputManager
-    ├── Background
-    ├── Background_sky
-    └── Background_under
+    └── InputManager
 ```
 ---
 
@@ -254,12 +324,6 @@ Scenes
 
 - BossPattern : 보스 패턴(화염구, 미사일, 소환 몬스터) 프리팹
 - Enemy : 일반 몬스터 프리팹
-
----
-
-### Resources
-
-런타임에 동적으로 로드할 리소스를 관리합니다.
 
 ---
 
@@ -303,21 +367,21 @@ Singleton, ManagersHub, 공통 Enum 등을 포함합니다.
 
 ---
 
+### Jelly
+
+게임의 젤리 동작을 담당하는 클래스를 관리합니다.
+
+---
+
 ### Managers
 
 게임의 전역 기능을 관리하는 Manager 클래스를 관리합니다.
 
 ---
 
-### Map
-
-맵 오브젝트 및 상호작용 클래스를 관리합니다.
-
----
-
 ### Network
 
-서버 통신 및 API 데이터 클래스를 관리합니다.
+DB 데이터 클래스를 관리합니다.
 
 Request와 Response 데이터를 포함합니다.
 
@@ -332,14 +396,6 @@ Request와 Response 데이터를 포함합니다.
 ### UI
 
 게임 UI 관련 클래스를 관리합니다.
-
----
-
-### Utils
-
-여러 클래스에서 공통으로 사용할 기능을 관리합니다.
-
-향후 문자열 처리, 계산 함수, 확장 메서드 등을 추가할 예정입니다.
 
 ---
 
@@ -397,10 +453,8 @@ UI 프리팹 및 UI 리소스를 관리합니다.
 - ManagersHub.Game
 - ManagersHub.Scene
 - ManagersHub.Web
-- ManagersHub.Resource
 - ManagersHub.Player
 - ManagersHub.Input
-- ManagersHub.UI
 - ManagersHub.Sound
 
 ---
@@ -414,12 +468,6 @@ UI 프리팹 및 UI 리소스를 관리합니다.
 ### SceneManagerEx
 
 씬 전환 및 현재 씬을 관리합니다.
-
----
-
-### ResourceManager
-
-리소스 로드 및 관리를 담당합니다.
 
 ---
 
@@ -444,15 +492,15 @@ UI 프리팹 및 UI 리소스를 관리합니다.
 
 ---
 
-### UIManager
-
-UI 생성 및 관리를 담당합니다.
-
----
-
 ### SoundManager
 
 BGM 및 효과음을 관리합니다.
+
+---
+
+### TimerManager
+
+게임 플레이 시간을 측정하고 관리합니다.
 
 ---
 
@@ -480,7 +528,7 @@ BGM 및 효과음을 관리합니다.
 
 ---
 
-### MonsterController
+### BossSlimeController
 
 보스가 소환하는 몬스터를 관리합니다.
 
@@ -540,6 +588,18 @@ BGM 및 효과음을 관리합니다.
 
 ---
 
+### JellySurfaceWave
+
+젤리 표면에 충돌이 발생했을 때 파동 효과를 생성하고, 표면의 비주얼과 Collider를 함께 변형합니다.
+
+---
+
+### JellyVisual
+
+충돌 및 이동에 반응하여 젤리 캐릭터가 눌리거나 늘어나는 변형 효과를 관리합니다.
+
+---
+
 ### PlayerBase
 
 플레이어의 공통 기능을 정의한 부모 클래스입니다.
@@ -584,33 +644,27 @@ BGM 및 효과음을 관리합니다.
 
 ---
 
-### GoalController
+### BossUI
 
-스테이지 클리어를 처리합니다.
-
----
-
-### DeathZone
-
-플레이어의 낙사 및 사망을 처리합니다.
+보스 UI를 관리합니다.
 
 ---
 
-### InteractableObject
+### LoginUI
 
-상호작용 가능한 맵 오브젝트의 부모 클래스입니다.
-
----
-
-### ApiRoutes
-
-서버 API 주소를 관리합니다.
+로그인 UI를 관리합니다.
 
 ---
 
-### SubmitScoreRequest
+### MainMenuUI
 
-점수 등록 요청 데이터를 저장합니다.
+메인메뉴 UI를 관리합니다.
+
+---
+
+### TimerUI
+
+타이머 UI를 관리합니다.
 
 ---
 
@@ -683,21 +737,17 @@ Managers를 생성 및 초기화한 후 MainMenu 씬으로 이동합니다.
 Singleton<T>
 ├── GameManager
 ├── SceneManagerEx
-├── ResourceManager
 ├── WebManager
 ├── PlayerManager
 ├── InputManager
-├── UIManager
 └── SoundManager
 
 ManagersHub
 ├── Game
 ├── Scene
-├── Resource
 ├── Web
 ├── Player
 ├── Input
-├── UI
 └── Sound
 
 Boss
@@ -705,7 +755,7 @@ Boss
 ├── BossController
 ├── FireballController
 ├── MissileController
-└── MonsterController
+└── BossSlimeController
 
 Enemy
 ├── EnemyBase
@@ -725,19 +775,16 @@ Camera
 └── FollowCamera
 
 UI
+├── BossUI
 ├── UIBase
+├── LoginUI
 ├── MainMenuUI
 ├── InGameUI
+├── TimerUI
 ├── ResultUI
 └── RankingUI
 
-Map
-├── GoalController
-├── DeathZone
-└── InteractableObject
-
 Network
-├── ApiRoutes
 ├── Request
 │   └── SubmitScoreRequest
 └── Response
