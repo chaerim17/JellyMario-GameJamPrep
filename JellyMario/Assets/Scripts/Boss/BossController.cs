@@ -2,6 +2,7 @@
 using JellyMario.UI;
 using System.Collections;
 using System.Collections.Generic;
+using JellyMario.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -104,10 +105,18 @@ public class BossController : BossBase
 
         yield return StartPattern(3, GetPattern4Duration(), Pattern4_SpawnTrap());
 
-        // TODO: 타이머 DB에 저장
-        //TimerManager.Instance.StopTimer();
-        //float clearTime = TimerManager.Instance.GetClearTime();
-        //yield return ManagersHub.Web.SubmitScore(clearTime);
+        // 타이머 DB에 저장
+        TimerManager.Instance.StopTimer();
+
+        float clearTime =
+            TimerManager.Instance.CurrentTime;
+
+        WebManager.Instance.SubmitScore(
+            PlayerPrefs.GetString("PlayerName"),
+            clearTime
+        );
+
+        TimerManager.Instance.ResetTimer();
 
         // 보스 처치 후 처리
         Die();
@@ -462,6 +471,17 @@ public class BossController : BossBase
         // 보스 즉시 사망
         if (Keyboard.current.digit5Key.wasPressedThisFrame)
         {
+            TimerManager.Instance.StopTimer();
+
+            float clearTime =
+                TimerManager.Instance.CurrentTime;
+
+            WebManager.Instance.SubmitScore(
+                PlayerPrefs.GetString("PlayerName"),
+                clearTime
+            );
+
+            TimerManager.Instance.ResetTimer();
             // 보스 처치 후 처리
             Die();
 
