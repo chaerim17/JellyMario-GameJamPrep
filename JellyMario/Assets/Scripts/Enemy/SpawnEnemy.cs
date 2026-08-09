@@ -1,61 +1,54 @@
 //튀어나오는 장애물
-using System.Collections;
 using UnityEngine;
 
 namespace JellyMario.Enemy
 {
+    [RequireComponent(typeof(Rigidbody2D))]
     public class SpawnEnemy : EnemyBase
     {
-        [SerializeField] private float riseHeight = 1f;
-        [SerializeField] private float moveSpeed = 2f;
-        [SerializeField] private float waitTime = 1.5f;
+        [SerializeField, Min(0f)] private float riseHeight = 1f;
+        [SerializeField, Min(0f)] private float moveSpeed = 1f;
+        [SerializeField, Min(0f)] private float waitTime = 1.5f;
 
-        private Vector3 _hiddenPos;
-        private Vector3 _showPos;
+        private Rigidbody2D _rigidbody;
+        private Vector2 _hiddenPosition;
+        private Vector2 _shownPosition;
+        private float _waitTimer;
+        private bool _movingUp = true;
 
         protected override void Awake()
         {
             base.Awake();
 
-            _hiddenPos = transform.position;
-            _showPos = _hiddenPos + Vector3.up * riseHeight;
+            _rigidbody = GetComponent<Rigidbody2D>();
+            _rigidbody.bodyType = RigidbodyType2D.Kinematic;
+            _rigidbody.gravityScale = 0f;
+
+            _hiddenPosition = _rigidbody.position;
+            _shownPosition = _hiddenPosition + Vector2.up * riseHeight;
+            _waitTimer = waitTime;
         }
 
-        private void Start()
+        private void FixedUpdate()
         {
-            StartCoroutine(MoveRoutine());
-        }
-
-        private IEnumerator MoveRoutine()
-        {
-            while (true)
+            if (_waitTimer > 0f)
             {
-                // 올라오기
-                while (Vector3.Distance(transform.position, _showPos) > 0.01f)
-                {
-                    transform.position = Vector3.MoveTowards(
-                        transform.position,
-                        _showPos,
-                        moveSpeed * Time.deltaTime);
+                _waitTimer -= Time.fixedDeltaTime;
+                _rigidbody.linearVelocity = Vector2.zero;
 
-                    yield return null;
-                }
-
-                yield return new WaitForSeconds(waitTime);
-
-                // 내려가기
-                while (Vector3.Distance(transform.position, _hiddenPos) > 0.01f)
-                {
-                    transform.position = Vector3.MoveTowards(
-                        transform.position,
-                        _hiddenPos,
-                        moveSpeed * Time.deltaTime);
-
-                    yield return null;
-                }
-
-                yield return new WaitForSeconds(waitTime);
+                return;
             }
+
+            Vector2 target = _movingUp ? _shownPosition : _hiddenPosition;
+            Vector2 nextPosition = Vector2.MoveTowards(_rigidbody.position, target, moveSpeed * Time.fixedDeltaTime);
+
+            _rigidbody.MovePosition(nextPosition);
+
+            if ((nextPosition - target).sqrMagnitude > 0.0001f)
+                return;
+
+            _movingUp = !_movingUp;
+            _waitTimer = waitTime;
         }
     }
 }
