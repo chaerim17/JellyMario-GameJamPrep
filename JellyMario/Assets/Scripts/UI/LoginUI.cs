@@ -73,7 +73,8 @@ namespace JellyMario.UI
            
             // DB에 선택 캐릭터와 닉네임 전송
             WebManager.Instance.SubmitProfile(nickname, selectedCharacter);
-
+            Debug.Log($"TimerManager = {TimerManager.Instance}");
+            
             // 타이머 시작
             TimerManager.Instance.StartTimer();
 

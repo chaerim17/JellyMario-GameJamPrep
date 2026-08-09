@@ -10,7 +10,9 @@ namespace JellyMario.UI
         public override void Initialize()
         {
             base.Initialize();
+            Debug.Log("TimerManager Created");
         }
+
 
         private void Update()
         {

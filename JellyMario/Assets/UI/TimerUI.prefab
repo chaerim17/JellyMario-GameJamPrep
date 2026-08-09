@@ -84,6 +84,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5945697267288755931}
+  - component: {fileID: 4455525468507559890}
   m_Layer: 5
   m_Name: TimerUI
   m_TagString: Untagged
@@ -115,6 +116,19 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: -100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4455525468507559890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6236682789395701285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfe4690c4454bec4fbac4dbcc00ba850, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.UI.TimerUI
+  timerText: {fileID: 109099227480178707}
 --- !u!1 &6644412033158214767
 GameObject:
   m_ObjectHideFlags: 0

@@ -458,6 +458,16 @@ public class BossController : BossBase
             bossUI.SetProgress(0.25f);
             StartCoroutine(StartPattern(3, GetPattern4Duration(), Pattern4_SpawnTrap()));
         }
+
+        // 보스 즉시 사망
+        if (Keyboard.current.digit5Key.wasPressedThisFrame)
+        {
+            // 보스 처치 후 처리
+            Die();
+
+            // 타이틀 화면으로 이동
+            SceneManager.LoadScene("Init");
+        }
     }
 
     // 보스 UI 진행률 업데이트
