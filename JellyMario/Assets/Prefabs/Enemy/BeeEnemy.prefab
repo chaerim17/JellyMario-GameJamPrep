@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: -6510841098610966909}
   - component: {fileID: 8511607932898440795}
   - component: {fileID: -5208999909798205149}
-  m_Layer: 0
+  - component: {fileID: 8736245910372458101}
+  m_Layer: 12
   m_Name: BeeEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,8 +56,6 @@ MonoBehaviour:
   - {fileID: 2022456678331456872, guid: 82ab7d11a0ea61b4aa15c5aea3da640b, type: 3}
   - {fileID: -4011198246885029844, guid: eb6ad41cd11f3774fbb674ad0ce0b14c, type: 3}
   moveFrameTime: 0.5
-  hitFrames: []
-  hitFrameTime: 0.5
   dieFrames:
   - {fileID: 5432145279577840185, guid: 81134561b1e62c6489491397544d649b, type: 3}
   dieFrameTime: 0.5
@@ -144,8 +143,8 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
+  m_CollisionDetection: 1
+  m_Constraints: 6
 --- !u!114 &-5208999909798205149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,6 +167,20 @@ MonoBehaviour:
   sideExpansion: 1.15
   visualHalfSize: {x: 0.5, y: 0.5}
   anchorStrength: 1
+--- !u!114 &8736245910372458101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2863783091377752626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c069bbe70194d0a895feb48364ac824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellySurfaceFollower2D
+  minimumGroundNormalY: 0.5
+  cancelGroundNormalVelocity: 1
 --- !u!1 &7934393125508608170
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,7 +260,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 2022456678331456872, guid: 82ab7d11a0ea61b4aa15c5aea3da640b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
