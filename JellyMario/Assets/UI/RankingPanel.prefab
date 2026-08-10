@@ -1678,7 +1678,6 @@ GameObject:
   - component: {fileID: 805744793067991755}
   - component: {fileID: 505960026493908249}
   - component: {fileID: 6828178130397497516}
-  - component: {fileID: 2987753054693805723}
   m_Layer: 5
   m_Name: Rank1
   m_TagString: Untagged
@@ -1808,21 +1807,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &2987753054693805723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1502843724695318249}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df4957afa593f88439067cc066cca32c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.UI.RankingUI
-  rankTexts: []
-  nameTexts: []
-  timeTexts: []
 --- !u!1 &1645858123203087585
 GameObject:
   m_ObjectHideFlags: 0
