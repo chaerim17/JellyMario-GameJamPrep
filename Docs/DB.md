@@ -23,10 +23,33 @@ PostgreSQL
 | Project Name | `jelly-mario-ranking` |
 | Service | Supabase |
 | Database | PostgreSQL |
+| --- | --- |
+| Project Name | `jelly-mario-player-info` |
+| Service | Supabase |
+| Database | PostgreSQL |
+
 
 ---
 
 ## 테이블 구조
+
+#### `player`
+
+```sql
+CREATE TABLE player (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "playerName" VARCHAR(20) NOT NULL,
+    "characterId" INT NOT NULL,
+    "createdAt" TIMESTAMP DEFAULT NOW()
+);
+```
+
+| 컬럼 | 설명 |
+|--------|--------|
+| id | 기본 키(PK) |
+| playerName | 플레이어 닉네임 |
+| characterId | 선택한 캐릭터 번호 |
+| createdAt | 데이터 생성 시각 |
 
 ### `ranking`
 
@@ -50,6 +73,19 @@ CREATE TABLE ranking (
 
 ## API
 
+### 플레이어 프로필 저장
+
+**Method:** `POST`
+**Endpoint:** `/rest/v1/player`
+**Status:** 구현 완료
+
+```json
+{
+  "playerName": "Chaerim",
+  "characterId": 2
+}
+```
+
 ### 랭킹 저장
 
 **Method:** `POST`  
@@ -67,14 +103,10 @@ CREATE TABLE ranking (
 
 **Method:** `GET`  
 **Endpoint:** `/rest/v1/ranking?select=*`
-**Status:** 구현 예정
+**Status:** 구현 완료
 
-#### 예정 기능
-클리어 시간 오름차순 정렬
-
-```text
-/rest/v1/ranking?select=*&order=clearTime.asc
-```
+현재 게임은 닉네임 및 캐릭터 선택 기능을 사용하며,
+Supabase를 통해 플레이어 프로필 및 랭킹 정보를 저장합니다.
 
 ---
 
@@ -103,8 +135,6 @@ request.SetRequestHeader(
 ---
 
 ## 권한
-
-현재 랭킹 시스템은 로그인 기능을 사용하지 않습니다.
 
 anon 권한 정책:
 
@@ -140,13 +170,3 @@ playername
 > 이 규칙을 지키지 않으면 Unity JSON 필드명과 DB 컬럼명이 달라져 요청 또는 응답 처리에서 문제가 생길 수 있습니다.
 
 ---
-
-## TODO
-
-- [ ] `SubmitScore()` 구현
-- [ ] `GetRanking()` 구현
-- GET 통신 테스트
-- [ ] `RankingResponse` 파싱
-- [ ] 랭킹 UI 구현
-- [ ] 게임 클리어 후 자동 기록 등록
-- [ ] Top 10 랭킹 조회 기능 구현
