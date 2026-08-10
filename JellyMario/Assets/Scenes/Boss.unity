@@ -1463,7 +1463,7 @@ GameObject:
   - component: {fileID: 1119407908}
   - component: {fileID: 1119407909}
   m_Layer: 0
-  m_Name: Player point
+  m_Name: Playerpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1494,7 +1494,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d6fe151cb8a4a538a19ee6f37365aac, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Player.PlayerSpawner
   playerPoint: {fileID: 1119407908}
   playerPrefabs:
@@ -8245,37 +8245,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1699453406}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1234657116
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1234657117}
-  m_Layer: 0
-  m_Name: PlayerPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1234657117
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1234657116}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7, y: -2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1366419366 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5895307868320994847, guid: f932f19deca43bf45bc07ff742db46e0, type: 3}
@@ -9565,5 +9534,4 @@ SceneRoots:
   - {fileID: 982908995}
   - {fileID: 914803890}
   - {fileID: 1611143521}
-  - {fileID: 1234657117}
   - {fileID: 1119407908}
