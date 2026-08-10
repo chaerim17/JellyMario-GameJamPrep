@@ -9110,6 +9110,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RankingPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 5831831523268883396, guid: af2b04caefd51cc42a827648b2b735d8, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6388306519336405912, guid: af2b04caefd51cc42a827648b2b735d8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -9140,7 +9144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6388306519336405912, guid: af2b04caefd51cc42a827648b2b735d8, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 800
+      value: 680.6136
       objectReference: {fileID: 0}
     - target: {fileID: 6388306519336405912, guid: af2b04caefd51cc42a827648b2b735d8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9176,7 +9180,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6388306519336405912, guid: af2b04caefd51cc42a827648b2b735d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6388306519336405912, guid: af2b04caefd51cc42a827648b2b735d8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9190,8 +9194,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2987753054693805723, guid: af2b04caefd51cc42a827648b2b735d8, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
