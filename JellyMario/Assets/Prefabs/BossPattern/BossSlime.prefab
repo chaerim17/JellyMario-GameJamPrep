@@ -61,7 +61,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -189,7 +189,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baa51813b15657c4888deae342c3d381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossSlimeController
-  idleSprites: []
+  idleSprites:
+  - {fileID: -1834428910051499608, guid: ea5a8b90aa4f17a4f96fbfeff465d6e3, type: 3}
+  - {fileID: 7457892226925902459, guid: f2b45d4661385ff4a8995b76f108f900, type: 3}
+  - {fileID: -7935564780887180644, guid: 03bc82c82c12bec44a93650bcf513bfc, type: 3}
   animationSpeed: 0.3
   moveSpeed: 2
   rotationSpeed: 180
