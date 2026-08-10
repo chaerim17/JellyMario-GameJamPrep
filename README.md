@@ -94,6 +94,10 @@ JellyAlien은 젤리 특유의 탄성과 불안정한 움직임을 중심으로 
 세부 구현 문서는 `/docs` 폴더를 참고하세요.
 - [Framework](Docs/Framework.md)
 - [Physics System](Docs/.md)
+- [Player](Docs/Player.md)
+- [Enemy Guide](Docs/EnemyGuide.md)
+- [Boss Pattern](Docs/BossPattern.md)
+- [Layer](Docs/Layer.md)
 - [Network & Ranking Server](Docs/DB.md)
 
 ## Team Jellien
