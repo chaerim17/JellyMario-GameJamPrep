@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+using JellyMario.Player;
+
 namespace JellyMario.CameraSystem
 {
     // 같은 게임 오브젝트에 여러 개의 FollowCamera 컴포넌트가 붙는 것을 방지
@@ -15,19 +17,18 @@ namespace JellyMario.CameraSystem
         [SerializeField, Min(0f)] private float verticalMargin = 2f;
 
         // 초기화
-        private void Awake()
+        private void LateUpdate()
         {
             if (target == null)
             {
-                Debug.LogWarning("카메라가 따라갈 대상이 등록되지 않았습니다.", this);
-                
-                enabled = false;
-                return;
-            }
-        }
+                PlayerController player = FindAnyObjectByType<PlayerController>();
 
-        private void LateUpdate()
-        {
+                if (player == null)
+                    return;
+
+                target = player.transform;
+            }
+
             // 플레이어와 카메라 중심 사이의 거리
             float distanceX = target.position.x - transform.position.x;
             float distanceY = target.position.y - transform.position.y;

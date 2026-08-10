@@ -20,7 +20,7 @@ namespace JellyMario.UI
         public override void Initialize()
         {
             base.Initialize();
-            SelectCharacter(0);
+            SelectCharacter(PlayerPrefs.GetInt("SelectedCharacter", 0));
         }
 
         // Test 이후 init 다른 곳에서 호출시 제거
@@ -32,7 +32,13 @@ namespace JellyMario.UI
 
         public void SelectCharacter(int index)
         {
+            if (index < 0 || index >= outlines.Length)
+                index = 0;
+
             selectedCharacter = index;
+
+            PlayerPrefs.SetInt("SelectedCharacter", selectedCharacter);
+            PlayerPrefs.Save();
 
             for (int i = 0; i < outlines.Length; i++)
             {
@@ -72,6 +78,7 @@ namespace JellyMario.UI
             // 플레이어 정보 저장
             PlayerPrefs.SetString("PlayerName", nickname);
             PlayerPrefs.SetInt("SelectedCharacter", selectedCharacter);
+            PlayerPrefs.Save();
 
             WebManager.Instance.SubmitProfile(
                 nickname,

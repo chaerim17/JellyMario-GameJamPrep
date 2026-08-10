@@ -130,14 +130,14 @@ namespace JellyMario.Player
         {
             base.Jump();
 
-            ManagersHub.Sound?.PlayJumpSFX();
-
             jellySurfaceFollower?.SetFollowingEnabled(false);
 
             Vector2 direction = jumpDirection.up.normalized;
             _rigidbody.linearVelocity = direction * jumpPower;
 
             jellyVisual?.Stretch(jumpStretch);
+
+            ManagersHub.Sound?.PlayJumpSFX();
         }
 
         // 충돌 처리
