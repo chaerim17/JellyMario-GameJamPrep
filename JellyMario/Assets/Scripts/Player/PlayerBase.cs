@@ -142,7 +142,7 @@ namespace JellyMario.Player
             if (_animationCoroutine != null) 
                 StopCoroutine(_animationCoroutine);
 
-            bool loop = state != PlayerState.Jump;
+            bool loop = state != PlayerState.Jump && state != PlayerState.Die;
 
             _animationCoroutine = StartCoroutine(PlayAnimation(selectedFrames, selectedFrameTime, state, loop));
         }

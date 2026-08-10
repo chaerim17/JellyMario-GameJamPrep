@@ -1,7 +1,9 @@
 ﻿using JellyMario.Core;
+using JellyMario.Effects;
 using JellyMario.Jelly;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 namespace JellyMario.Player
 {
@@ -27,8 +29,14 @@ namespace JellyMario.Player
         [SerializeField] private JellySurfaceFollower2D jellySurfaceFollower;
         [SerializeField] private float jumpStretch = 0.1f;
 
+        [Header("Die 설정")]
+        [SerializeField] private PixelShatterEffect pixelShatterEffect;
+        [SerializeField, Min(0f)] private float deathDelay = 0.8f;
+
         private Rigidbody2D _rigidbody;
+        private Collider2D _collider;
         private Vector2 _moveInput;
+        private bool _isDead;
 
         // 플레이어 초기화
         protected override void Initialize()
@@ -36,6 +44,7 @@ namespace JellyMario.Player
             base.Initialize();
 
             _rigidbody = GetComponent<Rigidbody2D>();
+            _collider = GetComponent<Collider2D>();
 
             if (jumpDirection == null)
                 jumpDirection = transform;
@@ -49,6 +58,9 @@ namespace JellyMario.Player
             if (jellySurfaceFollower == null)
                 jellySurfaceFollower = gameObject.AddComponent<JellySurfaceFollower2D>();
 
+            if (pixelShatterEffect == null)
+                pixelShatterEffect = GetComponent<PixelShatterEffect>();
+
             if (ManagersHub.Player != null)
                 ManagersHub.Player.RegisterPlayer(this);
         }
@@ -56,6 +68,9 @@ namespace JellyMario.Player
         // 플레이어 입력 처리
         protected override void HandleInput()
         {
+            if (_isDead)
+                return;
+
             if (ManagersHub.Input == null)
             {
                 _moveInput = Vector2.zero;
@@ -72,6 +87,9 @@ namespace JellyMario.Player
         // 플레이어 이동 처리
         protected override void HandleMovement()
         {
+            if (_isDead)
+                return;
+
             // Jump 애니메이션 중에도 회전 조작은 유지하되,
             // 애니메이션 상태는 Move로 즉시 바꾸지 않는다.
             if (CurrentState == PlayerState.Jump)
@@ -128,6 +146,9 @@ namespace JellyMario.Player
         // 점프
         public override void Jump()
         {
+            if (_isDead)
+                return;
+
             base.Jump();
 
             jellySurfaceFollower?.SetFollowingEnabled(false);
@@ -143,6 +164,9 @@ namespace JellyMario.Player
         // 충돌 처리
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            if (_isDead)
+                return;
+
             if (IsDeathLayer(collision.gameObject))
             {
                 Die();
@@ -211,6 +235,9 @@ namespace JellyMario.Player
         // 트리거 처리
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (_isDead)
+                return;
+
             if (IsDeathLayer(other.gameObject))
             {
                 Die();
@@ -227,16 +254,43 @@ namespace JellyMario.Player
 
         public override void Die()
         {
+            if (_isDead)
+                return;
+
+            _isDead = true;
             base.Die();
 
+            _moveInput = Vector2.zero;
             jellySurfaceFollower?.SetFollowingEnabled(false);
 
+            _rigidbody.linearVelocity = Vector2.zero;
+            _rigidbody.angularVelocity = 0f;
+            _rigidbody.simulated = false;
+
+            if (_collider != null)
+                _collider.enabled = false;
+
+            // 사운드가 없어도 사망 연출과 재시작이 진행되도록 먼저 예약한다.
+            StartCoroutine(PlayDeathSequence());
             ManagersHub.Sound?.PlayDeathSFX();
 
             Debug.Log("Player Dead");
+        }
 
-            // 사망 처리
-            // 현재 씬 다시 시작
+        private IEnumerator PlayDeathSequence()
+        {
+            // Die 상태의 Hit 스프라이트가 적용된 다음 조각을 생성한다.
+            yield return null;
+
+            SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            float waitTime = deathDelay;
+
+            if (pixelShatterEffect != null && pixelShatterEffect.Play(spriteRenderer))
+                waitTime = Mathf.Max(waitTime, pixelShatterEffect.Duration);
+
+            if (waitTime > 0f)
+                yield return new WaitForSeconds(waitTime);
+
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 

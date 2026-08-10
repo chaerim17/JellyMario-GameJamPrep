@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1130467266957052361}
   - component: {fileID: 1843587932020718472}
   - component: {fileID: 6249605045303289202}
+  - component: {fileID: 3377216338446382048}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -69,6 +70,8 @@ MonoBehaviour:
   jellyVisual: {fileID: 1843587932020718472}
   jellySurfaceFollower: {fileID: 0}
   jumpStretch: 0.1
+  pixelShatterEffect: {fileID: 3377216338446382048}
+  deathDelay: 0.8
 --- !u!50 &4249366046672204757
 Rigidbody2D:
   serializedVersion: 5
@@ -169,6 +172,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Jelly.JellySurfaceFollower2D
   minimumGroundNormalY: 0.5
   cancelGroundNormalVelocity: 1
+--- !u!114 &3377216338446382048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4204740589446721656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f3d2a94b51e4fe190c876ac2d73158b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::JellyMario.Effects.PixelShatterEffect
+  columns: 8
+  rows: 8
+  duration: 0.75
+  minScatterForce: 1.5
+  maxScatterForce: 4.5
+  randomForce: 1.2
+  upwardForce: 2
+  gravity: 7
+  maxAngularSpeed: 720
+  fadeStart: 0.3
 --- !u!1 &8286850786535390705
 GameObject:
   m_ObjectHideFlags: 0
