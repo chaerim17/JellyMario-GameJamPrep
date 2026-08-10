@@ -80,11 +80,6 @@ namespace JellyMario.UI
             PlayerPrefs.SetInt("SelectedCharacter", selectedCharacter);
             PlayerPrefs.Save();
 
-            WebManager.Instance.SubmitProfile(
-                nickname,
-                selectedCharacter
-            );
-
             //Debug.Log($"WebManager = {WebManager.Instance}");
            
             // DB에 선택 캐릭터와 닉네임 전송

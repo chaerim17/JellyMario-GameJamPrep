@@ -76,6 +76,9 @@ public class BossController : BossBase
 
     private void FixedUpdate()
     {
+        if (IsDead)
+            return;
+
         if (!isMoving)
             return;
 
@@ -85,6 +88,9 @@ public class BossController : BossBase
     // 디버그용 패턴 출력
     private void Update()
     {
+        if (IsDead)
+            return;
+
         DebugPattern();
     }
 
@@ -127,9 +133,6 @@ public class BossController : BossBase
 
         // 보스 처치 후 처리
         Die();
-
-        // 타이틀 화면으로 이동
-        SceneManager.LoadScene("MainMenu");
     }
 
     // 패턴1 : 플레이어 시작 위치로 이동
@@ -488,10 +491,18 @@ public class BossController : BossBase
             TimerManager.Instance.ResetTimer();
             // 보스 처치 후 처리
             Die();
-
-            // 타이틀 화면으로 이동
-            SceneManager.LoadScene("MainMenu");
         }
+    }
+
+    protected override void OnDeathStarted()
+    {
+        isMoving = false;
+        DestroyMissiles();
+    }
+
+    protected override void OnDeathEffectFinished()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 
     // 보스 UI 진행률 업데이트

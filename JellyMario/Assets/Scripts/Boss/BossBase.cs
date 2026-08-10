@@ -1,5 +1,6 @@
 ﻿using JellyMario.Player;
 using System.Collections;
+using JellyMario.Effects;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,12 @@ public class BossBase : MonoBehaviour
 
     [SerializeField] protected float animationSpeed = 0.2f;
 
+    [Header("Die Animation")]
+    [SerializeField] protected Sprite[] dieFrames;
+    [SerializeField, Min(0.01f)] protected float dieFrameTime = 0.1f;
+    [SerializeField] private PixelShatterEffect pixelShatterEffect;
+    [SerializeField, Min(0f)] private float deathDelay = 0.8f;
+
     protected SpriteRenderer spriteRenderer;
     protected Rigidbody2D rb;
 
@@ -24,12 +31,18 @@ public class BossBase : MonoBehaviour
     private readonly List<Vector2> physicsShape = new();
 
     private Coroutine animationCoroutine;
+    private bool _isDead;
+
+    protected bool IsDead => _isDead;
 
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         polygonCollider = GetComponent<PolygonCollider2D>();
+
+        if (pixelShatterEffect == null)
+            pixelShatterEffect = GetComponent<PixelShatterEffect>();
 
         currentHp = maxHp;
     }
@@ -84,7 +97,30 @@ public class BossBase : MonoBehaviour
     // 보스 사망
     protected virtual void Die()
     {
+        if (_isDead)
+            return;
+
+        _isDead = true;
         Debug.Log("Boss Dead");
+
+        if (animationCoroutine != null)
+        {
+            StopCoroutine(animationCoroutine);
+            animationCoroutine = null;
+        }
+
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = true;
+
+        if (polygonCollider != null)
+            polygonCollider.enabled = false;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.simulated = false;
+        }
 
         BossSlimeController[] slimes = FindObjectsByType<BossSlimeController>();
 
@@ -93,6 +129,45 @@ public class BossBase : MonoBehaviour
             slime.Die();
         }
 
+        OnDeathStarted();
+        StartCoroutine(PlayDeathSequence());
+    }
+
+    private IEnumerator PlayDeathSequence()
+    {
+        if (dieFrames != null && dieFrames.Length > 0)
+        {
+            WaitForSeconds frameWait = new WaitForSeconds(
+                Mathf.Max(0.01f, dieFrameTime)
+            );
+
+            foreach (Sprite frame in dieFrames)
+            {
+                if (frame == null)
+                    continue;
+
+                spriteRenderer.sprite = frame;
+                yield return frameWait;
+            }
+        }
+
+        float waitTime = deathDelay;
+
+        if (pixelShatterEffect != null && pixelShatterEffect.Play(spriteRenderer))
+            waitTime = Mathf.Max(waitTime, pixelShatterEffect.Duration);
+
+        if (waitTime > 0f)
+            yield return new WaitForSeconds(waitTime);
+
+        OnDeathEffectFinished();
+    }
+
+    protected virtual void OnDeathStarted()
+    {
+    }
+
+    protected virtual void OnDeathEffectFinished()
+    {
         Destroy(gameObject);
     }
 
