@@ -15,7 +15,11 @@ namespace JellyMario.CameraSystem
         [Header("화면 여백 설정")]
         [SerializeField, Min(0f)] private float horizontalMargin = 1f;
         [SerializeField, Min(0f)] private float verticalMargin = 2f;
-
+        private void Start()
+        {
+            var cam = GetComponent<Camera>();
+            Debug.Log($"Size={cam.orthographicSize}, Aspect={cam.aspect}, Screen={Screen.width}x{Screen.height}");
+        }
         // 초기화
         private void LateUpdate()
         {
